@@ -4,12 +4,15 @@ namespace App\Entity;
 
 use App\Enum\PaymentMethod;
 use App\Repository\PaymentRepository;
+use App\Traits\TimestampableTrait;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PaymentRepository::class)]
 class Payment
 {
+    use TimestampableTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

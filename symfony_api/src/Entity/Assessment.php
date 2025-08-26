@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Enum\AssessmentDistribution;
 use App\Enum\AssessmentStatus;
 use App\Repository\AssessmentRepository;
+use App\Traits\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -13,6 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: AssessmentRepository::class)]
 class Assessment
 {
+    use TimestampableTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

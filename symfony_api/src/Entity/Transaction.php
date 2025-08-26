@@ -7,12 +7,15 @@ use App\Enum\PaymentMethod;
 use App\Enum\TransactionStatus;
 use App\Enum\TransactionType;
 use App\Repository\TransactionRepository;
+use App\Traits\TimestampableTrait;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
 class Transaction
 {
+    use TimestampableTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
