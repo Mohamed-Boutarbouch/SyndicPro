@@ -61,9 +61,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phoneNumber = null;
 
+    /**
+     * @var Collection<int, Unit>
+     */
+    #[ORM\OneToMany(targetEntity: Unit::class, mappedBy: 'user')]
+    private Collection $units;
+
     public function __construct()
     {
         $this->coOwners = new ArrayCollection();
+        $this->units = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -232,6 +239,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPhoneNumber(?string $phoneNumber): static
     {
         $this->phoneNumber = $phoneNumber;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Unit>
+     */
+    public function getUnits(): Collection
+    {
+        return $this->units;
+    }
+
+    public function addUnit(Unit $unit): static
+    {
+        if (!$this->units->contains($unit)) {
+            $this->units->add($unit);
+            $unit->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUnit(Unit $unit): static
+    {
+        if ($this->units->removeElement($unit)) {
+            // set the owning side to null (unless already changed)
+            if ($unit->getUser() === $this) {
+                $unit->setUser(null);
+            }
+        }
 
         return $this;
     }

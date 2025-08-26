@@ -34,9 +34,16 @@ class Building
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'building')]
     private Collection $users;
 
+    /**
+     * @var Collection<int, Unit>
+     */
+    #[ORM\OneToMany(targetEntity: Unit::class, mappedBy: 'building')]
+    private Collection $units;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->units = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -104,6 +111,36 @@ class Building
             // set the owning side to null (unless already changed)
             if ($user->getBuilding() === $this) {
                 $user->setBuilding(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Unit>
+     */
+    public function getUnits(): Collection
+    {
+        return $this->units;
+    }
+
+    public function addUnit(Unit $unit): static
+    {
+        if (!$this->units->contains($unit)) {
+            $this->units->add($unit);
+            $unit->setBuilding($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUnit(Unit $unit): static
+    {
+        if ($this->units->removeElement($unit)) {
+            // set the owning side to null (unless already changed)
+            if ($unit->getBuilding() === $this) {
+                $unit->setBuilding(null);
             }
         }
 
