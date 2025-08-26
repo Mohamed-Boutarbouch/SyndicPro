@@ -2,60 +2,53 @@
 
 namespace App\Entity;
 
-use App\Enum\UnitType;
-use App\Repository\UnitRepository;
-use App\Traits\TimestampableTrait;
+use App\Enum\ContributionStatus;
+use App\Repository\RegularContributionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: UnitRepository::class)]
-class Unit
+#[ORM\Entity(repositoryClass: RegularContributionRepository::class)]
+class RegularContribution
 {
-    use TimestampableTrait;
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'units')]
+    #[ORM\ManyToOne(inversedBy: 'regularContributions')]
     private ?Building $building = null;
 
-    #[ORM\Column(enumType: UnitType::class)]
-    private ?UnitType $type = null;
-
     #[ORM\Column]
-    private ?int $floor = null;
+    private ?int $year = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $number = null;
+    #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 2)]
+    private ?string $totalAnnualAmount = null;
 
-    #[ORM\ManyToOne(inversedBy: 'units')]
-    private ?User $user = null;
+    #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 2)]
+    private ?string $amountPerUnit = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $startDate = null;
 
-    #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $endDate = null;
 
-    /**
-     * @var Collection<int, Transaction>
-     */
-    #[ORM\OneToMany(targetEntity: Transaction::class, mappedBy: 'unit')]
-    private Collection $transactions;
+    #[ORM\Column(enumType: ContributionStatus::class)]
+    private ?ContributionStatus $status = null;
+
+    #[ORM\ManyToOne(inversedBy: 'regularContributions')]
+    private ?User $createdBy = null;
 
     /**
      * @var Collection<int, ContributionSchedule>
      */
-    #[ORM\OneToMany(targetEntity: ContributionSchedule::class, mappedBy: 'unit')]
+    #[ORM\OneToMany(targetEntity: ContributionSchedule::class, mappedBy: 'regularContribution')]
     private Collection $contributionSchedules;
 
     public function __construct()
     {
-        $this->transactions = new ArrayCollection();
         $this->contributionSchedules = new ArrayCollection();
     }
 
@@ -76,50 +69,38 @@ class Unit
         return $this;
     }
 
-    public function getType(): ?UnitType
+    public function getYear(): ?int
     {
-        return $this->type;
+        return $this->year;
     }
 
-    public function setType(UnitType $type): static
+    public function setYear(int $year): static
     {
-        $this->type = $type;
+        $this->year = $year;
 
         return $this;
     }
 
-    public function getFloor(): ?int
+    public function getTotalAnnualAmount(): ?string
     {
-        return $this->floor;
+        return $this->totalAnnualAmount;
     }
 
-    public function setFloor(int $floor): static
+    public function setTotalAnnualAmount(string $totalAnnualAmount): static
     {
-        $this->floor = $floor;
+        $this->totalAnnualAmount = $totalAnnualAmount;
 
         return $this;
     }
 
-    public function getNumber(): ?string
+    public function getAmountPerUnit(): ?string
     {
-        return $this->number;
+        return $this->amountPerUnit;
     }
 
-    public function setNumber(string $number): static
+    public function setAmountPerUnit(string $amountPerUnit): static
     {
-        $this->number = $number;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
+        $this->amountPerUnit = $amountPerUnit;
 
         return $this;
     }
@@ -141,39 +122,33 @@ class Unit
         return $this->endDate;
     }
 
-    public function setEndDate(?\DateTimeImmutable $endDate): static
+    public function setEndDate(\DateTimeImmutable $endDate): static
     {
         $this->endDate = $endDate;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Transaction>
-     */
-    public function getTransactions(): Collection
+    public function getStatus(): ?ContributionStatus
     {
-        return $this->transactions;
+        return $this->status;
     }
 
-    public function addTransaction(Transaction $transaction): static
+    public function setStatus(ContributionStatus $status): static
     {
-        if (!$this->transactions->contains($transaction)) {
-            $this->transactions->add($transaction);
-            $transaction->setUnit($this);
-        }
+        $this->status = $status;
 
         return $this;
     }
 
-    public function removeTransaction(Transaction $transaction): static
+    public function getCreatedBy(): ?User
     {
-        if ($this->transactions->removeElement($transaction)) {
-            // set the owning side to null (unless already changed)
-            if ($transaction->getUnit() === $this) {
-                $transaction->setUnit(null);
-            }
-        }
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): static
+    {
+        $this->createdBy = $createdBy;
 
         return $this;
     }
@@ -190,7 +165,7 @@ class Unit
     {
         if (!$this->contributionSchedules->contains($contributionSchedule)) {
             $this->contributionSchedules->add($contributionSchedule);
-            $contributionSchedule->setUnit($this);
+            $contributionSchedule->setRegularContribution($this);
         }
 
         return $this;
@@ -200,8 +175,8 @@ class Unit
     {
         if ($this->contributionSchedules->removeElement($contributionSchedule)) {
             // set the owning side to null (unless already changed)
-            if ($contributionSchedule->getUnit() === $this) {
-                $contributionSchedule->setUnit(null);
+            if ($contributionSchedule->getRegularContribution() === $this) {
+                $contributionSchedule->setRegularContribution(null);
             }
         }
 
