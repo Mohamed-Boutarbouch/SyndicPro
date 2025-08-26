@@ -40,10 +40,17 @@ class Building
     #[ORM\OneToMany(targetEntity: Unit::class, mappedBy: 'building')]
     private Collection $units;
 
+    /**
+     * @var Collection<int, Transaction>
+     */
+    #[ORM\OneToMany(targetEntity: Transaction::class, mappedBy: 'building')]
+    private Collection $transactions;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->units = new ArrayCollection();
+        $this->transactions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -141,6 +148,36 @@ class Building
             // set the owning side to null (unless already changed)
             if ($unit->getBuilding() === $this) {
                 $unit->setBuilding(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Transaction>
+     */
+    public function getTransactions(): Collection
+    {
+        return $this->transactions;
+    }
+
+    public function addTransaction(Transaction $transaction): static
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions->add($transaction);
+            $transaction->setBuilding($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransaction(Transaction $transaction): static
+    {
+        if ($this->transactions->removeElement($transaction)) {
+            // set the owning side to null (unless already changed)
+            if ($transaction->getBuilding() === $this) {
+                $transaction->setBuilding(null);
             }
         }
 
