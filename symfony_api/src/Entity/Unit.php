@@ -53,10 +53,17 @@ class Unit
     #[ORM\OneToMany(targetEntity: ContributionSchedule::class, mappedBy: 'unit')]
     private Collection $contributionSchedules;
 
+    /**
+     * @var Collection<int, AssessmentItem>
+     */
+    #[ORM\OneToMany(targetEntity: AssessmentItem::class, mappedBy: 'unit')]
+    private Collection $assessmentItems;
+
     public function __construct()
     {
         $this->transactions = new ArrayCollection();
         $this->contributionSchedules = new ArrayCollection();
+        $this->assessmentItems = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -202,6 +209,36 @@ class Unit
             // set the owning side to null (unless already changed)
             if ($contributionSchedule->getUnit() === $this) {
                 $contributionSchedule->setUnit(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, AssessmentItem>
+     */
+    public function getAssessmentItems(): Collection
+    {
+        return $this->assessmentItems;
+    }
+
+    public function addAssessmentItem(AssessmentItem $assessmentItem): static
+    {
+        if (!$this->assessmentItems->contains($assessmentItem)) {
+            $this->assessmentItems->add($assessmentItem);
+            $assessmentItem->setUnit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssessmentItem(AssessmentItem $assessmentItem): static
+    {
+        if ($this->assessmentItems->removeElement($assessmentItem)) {
+            // set the owning side to null (unless already changed)
+            if ($assessmentItem->getUnit() === $this) {
+                $assessmentItem->setUnit(null);
             }
         }
 

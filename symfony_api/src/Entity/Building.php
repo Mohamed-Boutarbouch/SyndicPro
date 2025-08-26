@@ -52,12 +52,19 @@ class Building
     #[ORM\OneToMany(targetEntity: RegularContribution::class, mappedBy: 'building')]
     private Collection $regularContributions;
 
+    /**
+     * @var Collection<int, Assessment>
+     */
+    #[ORM\OneToMany(targetEntity: Assessment::class, mappedBy: 'building')]
+    private Collection $assessments;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->units = new ArrayCollection();
         $this->transactions = new ArrayCollection();
         $this->regularContributions = new ArrayCollection();
+        $this->assessments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -215,6 +222,36 @@ class Building
             // set the owning side to null (unless already changed)
             if ($regularContribution->getBuilding() === $this) {
                 $regularContribution->setBuilding(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Assessment>
+     */
+    public function getAssessments(): Collection
+    {
+        return $this->assessments;
+    }
+
+    public function addAssessment(Assessment $assessment): static
+    {
+        if (!$this->assessments->contains($assessment)) {
+            $this->assessments->add($assessment);
+            $assessment->setBuilding($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssessment(Assessment $assessment): static
+    {
+        if ($this->assessments->removeElement($assessment)) {
+            // set the owning side to null (unless already changed)
+            if ($assessment->getBuilding() === $this) {
+                $assessment->setBuilding(null);
             }
         }
 
