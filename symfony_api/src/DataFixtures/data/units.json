@@ -1,0 +1,162 @@
+[
+    {
+        "id": 1,
+        "building_id": 1,
+        "type": "apartment",
+        "floor": 1,
+        "number": "A101",
+        "user_id": 1,
+        "start_date": "2023-01-01",
+        "end_date": null
+    },
+    {
+        "id": 2,
+        "building_id": 1,
+        "type": "apartment",
+        "floor": 1,
+        "number": "A102",
+        "user_id": 2,
+        "start_date": "2023-01-01",
+        "end_date": null
+    },
+    {
+        "id": 3,
+        "building_id": 1,
+        "type": "apartment",
+        "floor": 1,
+        "number": "A103",
+        "user_id": 3,
+        "start_date": "2023-01-01",
+        "end_date": null
+    },
+    {
+        "id": 4,
+        "building_id": 1,
+        "type": "apartment",
+        "floor": 2,
+        "number": "A201",
+        "user_id": 4,
+        "start_date": "2023-01-01",
+        "end_date": null
+    },
+    {
+        "id": 5,
+        "building_id": 1,
+        "type": "apartment",
+        "floor": 2,
+        "number": "A202",
+        "user_id": 5,
+        "start_date": "2023-01-01",
+        "end_date": null
+    },
+    {
+        "id": 6,
+        "building_id": 1,
+        "type": "apartment",
+        "floor": 2,
+        "number": "A203",
+        "user_id": 6,
+        "start_date": "2023-01-01",
+        "end_date": null
+    },
+    {
+        "id": 7,
+        "building_id": 1,
+        "type": "apartment",
+        "floor": 3,
+        "number": "A301",
+        "user_id": 7,
+        "start_date": "2023-01-01",
+        "end_date": null
+    },
+    {
+        "id": 8,
+        "building_id": 1,
+        "type": "apartment",
+        "floor": 3,
+        "number": "A302",
+        "user_id": 8,
+        "start_date": "2023-01-01",
+        "end_date": null
+    },
+    {
+        "id": 9,
+        "building_id": 1,
+        "type": "apartment",
+        "floor": 3,
+        "number": "A303",
+        "user_id": 9,
+        "start_date": "2023-01-01",
+        "end_date": null
+    },
+    {
+        "id": 10,
+        "building_id": 1,
+        "type": "apartment",
+        "floor": 4,
+        "number": "A401",
+        "user_id": 10,
+        "start_date": "2023-01-01",
+        "end_date": null
+    },
+    {
+        "id": 11,
+        "building_id": 1,
+        "type": "apartment",
+        "floor": 4,
+        "number": "A402",
+        "user_id": 11,
+        "start_date": "2023-01-01",
+        "end_date": null
+    },
+    {
+        "id": 12,
+        "building_id": 1,
+        "type": "apartment",
+        "floor": 4,
+        "number": "A403",
+        "user_id": 12,
+        "start_date": "2023-01-01",
+        "end_date": null
+    },
+    {
+        "id": 13,
+        "building_id": 1,
+        "type": "apartment",
+        "floor": 5,
+        "number": "A501",
+        "user_id": 13,
+        "start_date": "2023-01-01",
+        "end_date": null
+    },
+    {
+        "id": 14,
+        "building_id": 1,
+        "type": "apartment",
+        "floor": 5,
+        "number": "A502",
+        "user_id": 14,
+        "start_date": "2023-01-01",
+        "end_date": null
+    },
+    {
+        "id": 15,
+        "building_id": 1,
+        "type": "apartment",
+        "floor": 5,
+        "number": "A503",
+        "user_id": 15,
+        "start_date": "2023-01-01",
+        "end_date": null
+    },
+    {
+        "id": 16,
+        "building_id": 1,
+        "type": "commercial_local",
+        "floor": 0,
+        "number": "CL01",
+        "user_id": 16,
+        "start_date": "2023-01-01",
+        "end_date": null
+    }
+]

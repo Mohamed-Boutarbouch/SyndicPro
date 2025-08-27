@@ -1,0 +1,146 @@
+[
+    {
+        "id": 1,
+        "regular_contribution_id": 1,
+        "unit_id": 1,
+        "frequency": "monthly",
+        "amount_per_payment": 250.00,
+        "next_due_date": "2025-09-01",
+        "is_active": true
+    },
+    {
+        "id": 2,
+        "regular_contribution_id": 1,
+        "unit_id": 2,
+        "frequency": "monthly",
+        "amount_per_payment": 250.00,
+        "next_due_date": "2025-09-01",
+        "is_active": true
+    },
+    {
+        "id": 3,
+        "regular_contribution_id": 1,
+        "unit_id": 3,
+        "frequency": "quarterly",
+        "amount_per_payment": 750.00,
+        "next_due_date": "2025-10-01",
+        "is_active": true
+    },
+    {
+        "id": 4,
+        "regular_contribution_id": 1,
+        "unit_id": 4,
+        "frequency": "monthly",
+        "amount_per_payment": 250.00,
+        "next_due_date": "2025-09-01",
+        "is_active": true
+    },
+    {
+        "id": 5,
+        "regular_contribution_id": 1,
+        "unit_id": 5,
+        "frequency": "bi_monthly",
+        "amount_per_payment": 500.00,
+        "next_due_date": "2025-09-01",
+        "is_active": true
+    },
+    {
+        "id": 6,
+        "regular_contribution_id": 1,
+        "unit_id": 6,
+        "frequency": "monthly",
+        "amount_per_payment": 250.00,
+        "next_due_date": "2025-09-01",
+        "is_active": true
+    },
+    {
+        "id": 7,
+        "regular_contribution_id": 1,
+        "unit_id": 7,
+        "frequency": "quarterly",
+        "amount_per_payment": 750.00,
+        "next_due_date": "2025-10-01",
+        "is_active": true
+    },
+    {
+        "id": 8,
+        "regular_contribution_id": 1,
+        "unit_id": 8,
+        "frequency": "monthly",
+        "amount_per_payment": 250.00,
+        "next_due_date": "2025-09-01",
+        "is_active": true
+    },
+    {
+        "id": 9,
+        "regular_contribution_id": 1,
+        "unit_id": 9,
+        "frequency": "monthly",
+        "amount_per_payment": 250.00,
+        "next_due_date": "2025-09-01",
+        "is_active": true
+    },
+    {
+        "id": 10,
+        "regular_contribution_id": 1,
+        "unit_id": 10,
+        "frequency": "bi_monthly",
+        "amount_per_payment": 500.00,
+        "next_due_date": "2025-09-01",
+        "is_active": true
+    },
+    {
+        "id": 11,
+        "regular_contribution_id": 1,
+        "unit_id": 11,
+        "frequency": "monthly",
+        "amount_per_payment": 250.00,
+        "next_due_date": "2025-09-01",
+        "is_active": true
+    },
+    {
+        "id": 12,
+        "regular_contribution_id": 1,
+        "unit_id": 12,
+        "frequency": "four_monthly",
+        "amount_per_payment": 1000.00,
+        "next_due_date": "2025-09-01",
+        "is_active": true
+    },
+    {
+        "id": 13,
+        "regular_contribution_id": 1,
+        "unit_id": 13,
+        "frequency": "monthly",
+        "amount_per_payment": 250.00,
+        "next_due_date": "2025-09-01",
+        "is_active": true
+    },
+    {
+        "id": 14,
+        "regular_contribution_id": 1,
+        "unit_id": 14,
+        "frequency": "quarterly",
+        "amount_per_payment": 750.00,
+        "next_due_date": "2025-10-01",
+        "is_active": true
+    },
+    {
+        "id": 15,
+        "regular_contribution_id": 1,
+        "unit_id": 15,
+        "frequency": "monthly",
+        "amount_per_payment": 250.00,
+        "next_due_date": "2025-09-01",
+        "is_active": true
+    },
+    {
+        "id": 16,
+        "regular_contribution_id": 1,
+        "unit_id": 16,
+        "frequency": "bi_monthly",
+        "amount_per_payment": 500.00,
+        "next_due_date": "2025-09-01",
+        "is_active": true
+    }
+]

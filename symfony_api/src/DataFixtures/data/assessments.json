@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "building_id": 1,
+        "date": "2025-03-01",
+        "description": "Emergency roof repair assessment",
+        "total_amount": 24000.00,
+        "distribution_method": "equal",
+        "status": "issued",
+        "issued_by": 1,
+        "issued_at": "2025-03-01T09:00:00",
+        "due_date": "2025-04-15"
+    },
+    {
+        "id": 2,
+        "building_id": 1,
+        "date": "2025-06-01",
+        "description": "Annual building insurance premium",
+        "total_amount": 8000.00,
+        "distribution_method": "equal",
+        "status": "issued",
+        "issued_by": 1,
+        "issued_at": "2025-06-01T10:30:00",
+        "due_date": "2025-07-01"
+    }
+]

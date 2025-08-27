@@ -36,7 +36,7 @@ class Transaction
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(enumType: ExpenseCategory::class)]
+    #[ORM\Column(enumType: ExpenseCategory::class, nullable: true)]
     private ?ExpenseCategory $expense_category = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -130,7 +130,7 @@ class Transaction
         return $this->expense_category;
     }
 
-    public function setExpenseCategory(ExpenseCategory $expense_category): static
+    public function setExpenseCategory(?ExpenseCategory $expense_category): static
     {
         $this->expense_category = $expense_category;
 

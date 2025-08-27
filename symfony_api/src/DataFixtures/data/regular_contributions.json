@@ -1,0 +1,13 @@
+[
+    {
+        "id": 1,
+        "building_id": 1,
+        "year": 2025,
+        "total_annual_amount": 48000.00,
+        "amount_per_unit": 3000.00,
+        "start_date": "2025-01-01",
+        "end_date": "2025-12-31",
+        "status": "active",
+        "created_by": 1
+    }
+]

@@ -1,0 +1,227 @@
+[
+    {
+        "id": 1,
+        "email": "ahmed.benali@gmail.com",
+        "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LQ4YCOdh92lrjXm2m8RfbT5ta3Qt9wckx6ue.",
+        "phone_number": "+212-661-234567",
+        "first_name": "Ahmed",
+        "last_name": "Benali",
+        "building_id": 1,
+        "roles": [
+            "ROLE_ADMIN",
+            "ROLE_USER"
+        ],
+        "syndic_id": null,
+        "is_active": true
+    },
+    {
+        "id": 2,
+        "email": "fatima.elkhoury@gmail.com",
+        "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LQ4YCOdh92lrjXm2m8RfbT5ta3Qt9wckx6uf.",
+        "phone_number": "+212-661-345678",
+        "first_name": "Fatima",
+        "last_name": "El Khoury",
+        "building_id": 1,
+        "roles": [
+            "ROLE_USER"
+        ],
+        "syndic_id": 1,
+        "is_active": true
+    },
+    {
+        "id": 3,
+        "email": "youssef.marrakchi@gmail.com",
+        "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LQ4YCOdh92lrjXm2m8RfbT5ta3Qt9wckx6ug.",
+        "phone_number": "+212-661-456789",
+        "first_name": "Youssef",
+        "last_name": "Marrakchi",
+        "building_id": 1,
+        "roles": [
+            "ROLE_USER"
+        ],
+        "syndic_id": 1,
+        "is_active": true
+    },
+    {
+        "id": 4,
+        "email": "aicha.tazi@gmail.com",
+        "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LQ4YCOdh92lrjXm2m8RfbT5ta3Qt9wckx6uh.",
+        "phone_number": "+212-661-567890",
+        "first_name": "Aicha",
+        "last_name": "Tazi",
+        "building_id": 1,
+        "roles": [
+            "ROLE_USER"
+        ],
+        "syndic_id": 1,
+        "is_active": true
+    },
+    {
+        "id": 5,
+        "email": "omar.fassi@gmail.com",
+        "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LQ4YCOdh92lrjXm2m8RfbT5ta3Qt9wckx6ui.",
+        "phone_number": "+212-661-678901",
+        "first_name": "Omar",
+        "last_name": "Fassi",
+        "building_id": 1,
+        "roles": [
+            "ROLE_USER"
+        ],
+        "syndic_id": 1,
+        "is_active": true
+    },
+    {
+        "id": 6,
+        "email": "khadija.alami@gmail.com",
+        "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LQ4YCOdh92lrjXm2m8RfbT5ta3Qt9wckx6uj.",
+        "phone_number": "+212-661-789012",
+        "first_name": "Khadija",
+        "last_name": "Alami",
+        "building_id": 1,
+        "roles": [
+            "ROLE_USER"
+        ],
+        "syndic_id": 1,
+        "is_active": true
+    },
+    {
+        "id": 7,
+        "email": "hassan.benjelloun@gmail.com",
+        "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LQ4YCOdh92lrjXm2m8RfbT5ta3Qt9wckx6uk.",
+        "phone_number": "+212-661-890123",
+        "first_name": "Hassan",
+        "last_name": "Benjelloun",
+        "building_id": 1,
+        "roles": [
+            "ROLE_USER"
+        ],
+        "syndic_id": 1,
+        "is_active": true
+    },
+    {
+        "id": 8,
+        "email": "malika.cherkaoui@gmail.com",
+        "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LQ4YCOdh92lrjXm2m8RfbT5ta3Qt9wckx6ul.",
+        "phone_number": "+212-661-901234",
+        "first_name": "Malika",
+        "last_name": "Cherkaoui",
+        "building_id": 1,
+        "roles": [
+            "ROLE_USER"
+        ],
+        "syndic_id": 1,
+        "is_active": true
+    },
+    {
+        "id": 9,
+        "email": "rachid.kettani@gmail.com",
+        "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LQ4YCOdh92lrjXm2m8RfbT5ta3Qt9wckx6um.",
+        "phone_number": "+212-661-012345",
+        "first_name": "Rachid",
+        "last_name": "Kettani",
+        "building_id": 1,
+        "roles": [
+            "ROLE_USER"
+        ],
+        "syndic_id": 1,
+        "is_active": true
+    },
+    {
+        "id": 10,
+        "email": "nadia.bennis@gmail.com",
+        "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LQ4YCOdh92lrjXm2m8RfbT5ta3Qt9wckx6un.",
+        "phone_number": "+212-661-123456",
+        "first_name": "Nadia",
+        "last_name": "Bennis",
+        "building_id": 1,
+        "roles": [
+            "ROLE_USER"
+        ],
+        "syndic_id": 1,
+        "is_active": true
+    },
+    {
+        "id": 11,
+        "email": "karim.lahlou@gmail.com",
+        "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LQ4YCOdh92lrjXm2m8RfbT5ta3Qt9wckx6uo.",
+        "phone_number": "+212-661-234561",
+        "first_name": "Karim",
+        "last_name": "Lahlou",
+        "building_id": 1,
+        "roles": [
+            "ROLE_USER"
+        ],
+        "syndic_id": 1,
+        "is_active": true
+    },
+    {
+        "id": 12,
+        "email": "zineb.naciri@gmail.com",
+        "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LQ4YCOdh92lrjXm2m8RfbT5ta3Qt9wckx6up.",
+        "phone_number": "+212-661-345672",
+        "first_name": "Zineb",
+        "last_name": "Naciri",
+        "building_id": 1,
+        "roles": [
+            "ROLE_USER"
+        ],
+        "syndic_id": 1,
+        "is_active": true
+    },
+    {
+        "id": 13,
+        "email": "abdellatif.semlali@gmail.com",
+        "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LQ4YCOdh92lrjXm2m8RfbT5ta3Qt9wckx6uq.",
+        "phone_number": "+212-661-456783",
+        "first_name": "Abdellatif",
+        "last_name": "Semlali",
+        "building_id": 1,
+        "roles": [
+            "ROLE_USER"
+        ],
+        "syndic_id": 1,
+        "is_active": true
+    },
+    {
+        "id": 14,
+        "email": "siham.guerraoui@gmail.com",
+        "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LQ4YCOdh92lrjXm2m8RfbT5ta3Qt9wckx6ur.",
+        "phone_number": "+212-661-567894",
+        "first_name": "Siham",
+        "last_name": "Guerraoui",
+        "building_id": 1,
+        "roles": [
+            "ROLE_USER"
+        ],
+        "syndic_id": 1,
+        "is_active": true
+    },
+    {
+        "id": 15,
+        "email": "mustapha.berrada@gmail.com",
+        "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LQ4YCOdh92lrjXm2m8RfbT5ta3Qt9wckx6us.",
+        "phone_number": "+212-661-678905",
+        "first_name": "Mustapha",
+        "last_name": "Berrada",
+        "building_id": 1,
+        "roles": [
+            "ROLE_USER"
+        ],
+        "syndic_id": 1,
+        "is_active": true
+    },
+    {
+        "id": 16,
+        "email": "laila.idrissi@gmail.com",
+        "password_hash": "$2b$12$LQv3c1yqBWVHxkd0LQ4YCOdh92lrjXm2m8RfbT5ta3Qt9wckx6ut.",
+        "phone_number": "+212-661-789016",
+        "first_name": "Laila",
+        "last_name": "Idrissi",
+        "building_id": 1,
+        "roles": [
+            "ROLE_USER"
+        ],
+        "syndic_id": 1,
+        "is_active": true
+    }
+]

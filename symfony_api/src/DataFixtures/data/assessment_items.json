@@ -1,0 +1,226 @@
+[
+    {
+        "id": 1,
+        "assessment_id": 1,
+        "unit_id": 1,
+        "amount": 1500.00,
+        "status": "paid"
+    },
+    {
+        "id": 2,
+        "assessment_id": 1,
+        "unit_id": 2,
+        "amount": 1500.00,
+        "status": "paid"
+    },
+    {
+        "id": 3,
+        "assessment_id": 1,
+        "unit_id": 3,
+        "amount": 1500.00,
+        "status": "pending"
+    },
+    {
+        "id": 4,
+        "assessment_id": 1,
+        "unit_id": 4,
+        "amount": 1500.00,
+        "status": "paid"
+    },
+    {
+        "id": 5,
+        "assessment_id": 1,
+        "unit_id": 5,
+        "amount": 1500.00,
+        "status": "partial"
+    },
+    {
+        "id": 6,
+        "assessment_id": 1,
+        "unit_id": 6,
+        "amount": 1500.00,
+        "status": "paid"
+    },
+    {
+        "id": 7,
+        "assessment_id": 1,
+        "unit_id": 7,
+        "amount": 1500.00,
+        "status": "pending"
+    },
+    {
+        "id": 8,
+        "assessment_id": 1,
+        "unit_id": 8,
+        "amount": 1500.00,
+        "status": "paid"
+    },
+    {
+        "id": 9,
+        "assessment_id": 1,
+        "unit_id": 9,
+        "amount": 1500.00,
+        "status": "paid"
+    },
+    {
+        "id": 10,
+        "assessment_id": 1,
+        "unit_id": 10,
+        "amount": 1500.00,
+        "status": "overdue"
+    },
+    {
+        "id": 11,
+        "assessment_id": 1,
+        "unit_id": 11,
+        "amount": 1500.00,
+        "status": "paid"
+    },
+    {
+        "id": 12,
+        "assessment_id": 1,
+        "unit_id": 12,
+        "amount": 1500.00,
+        "status": "paid"
+    },
+    {
+        "id": 13,
+        "assessment_id": 1,
+        "unit_id": 13,
+        "amount": 1500.00,
+        "status": "pending"
+    },
+    {
+        "id": 14,
+        "assessment_id": 1,
+        "unit_id": 14,
+        "amount": 1500.00,
+        "status": "paid"
+    },
+    {
+        "id": 15,
+        "assessment_id": 1,
+        "unit_id": 15,
+        "amount": 1500.00,
+        "status": "paid"
+    },
+    {
+        "id": 16,
+        "assessment_id": 1,
+        "unit_id": 16,
+        "amount": 1500.00,
+        "status": "paid"
+    },
+    {
+        "id": 17,
+        "assessment_id": 2,
+        "unit_id": 1,
+        "amount": 500.00,
+        "status": "paid"
+    },
+    {
+        "id": 18,
+        "assessment_id": 2,
+        "unit_id": 2,
+        "amount": 500.00,
+        "status": "pending"
+    },
+    {
+        "id": 19,
+        "assessment_id": 2,
+        "unit_id": 3,
+        "amount": 500.00,
+        "status": "pending"
+    },
+    {
+        "id": 20,
+        "assessment_id": 2,
+        "unit_id": 4,
+        "amount": 500.00,
+        "status": "paid"
+    },
+    {
+        "id": 21,
+        "assessment_id": 2,
+        "unit_id": 5,
+        "amount": 500.00,
+        "status": "paid"
+    },
+    {
+        "id": 22,
+        "assessment_id": 2,
+        "unit_id": 6,
+        "amount": 500.00,
+        "status": "pending"
+    },
+    {
+        "id": 23,
+        "assessment_id": 2,
+        "unit_id": 7,
+        "amount": 500.00,
+        "status": "paid"
+    },
+    {
+        "id": 24,
+        "assessment_id": 2,
+        "unit_id": 8,
+        "amount": 500.00,
+        "status": "pending"
+    },
+    {
+        "id": 25,
+        "assessment_id": 2,
+        "unit_id": 9,
+        "amount": 500.00,
+        "status": "paid"
+    },
+    {
+        "id": 26,
+        "assessment_id": 2,
+        "unit_id": 10,
+        "amount": 500.00,
+        "status": "pending"
+    },
+    {
+        "id": 27,
+        "assessment_id": 2,
+        "unit_id": 11,
+        "amount": 500.00,
+        "status": "paid"
+    },
+    {
+        "id": 28,
+        "assessment_id": 2,
+        "unit_id": 12,
+        "amount": 500.00,
+        "status": "paid"
+    },
+    {
+        "id": 29,
+        "assessment_id": 2,
+        "unit_id": 13,
+        "amount": 500.00,
+        "status": "pending"
+    },
+    {
+        "id": 30,
+        "assessment_id": 2,
+        "unit_id": 14,
+        "amount": 500.00,
+        "status": "paid"
+    },
+    {
+        "id": 31,
+        "assessment_id": 2,
+        "unit_id": 15,
+        "amount": 500.00,
+        "status": "paid"
+    },
+    {
+        "id": 32,
+        "assessment_id": 2,
+        "unit_id": 16,
+        "amount": 500.00,
+        "status": "paid"
+    }
+]

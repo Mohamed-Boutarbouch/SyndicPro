@@ -27,6 +27,9 @@ class Assessment
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $date = null;
 
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $description = null;
+
     #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 2)]
     private ?string $totalAmount = null;
 
@@ -81,6 +84,18 @@ class Assessment
     public function setDate(\DateTimeImmutable $date): static
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }
