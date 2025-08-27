@@ -40,4 +40,9 @@ class UserService
     {
         return $this->userRepository->find($id);
     }
+
+    public function getSyndicByBuildingId(int $buildingId): ?User
+    {
+        return $this->userRepository->findSyndicByBuilding($buildingId);
+    }
 }
