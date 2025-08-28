@@ -41,8 +41,8 @@ class UserService
         return $this->userRepository->find($id);
     }
 
-    public function getSyndicByBuildingId(int $buildingId): ?User
+    public function getBuildingBySyndic(int $userId): ?User
     {
-        return $this->userRepository->findSyndicByBuilding($buildingId);
+        return $this->userRepository->findBuildingBySyndic($userId);
     }
 }

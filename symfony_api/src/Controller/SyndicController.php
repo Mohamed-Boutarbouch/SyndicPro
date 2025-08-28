@@ -11,7 +11,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/api/users', name: 'api_user_')]
-class UserController extends AbstractApiController
+class SyndicController extends AbstractApiController
 {
     public function __construct(
         SerializerInterface $serializer,
@@ -21,10 +21,10 @@ class UserController extends AbstractApiController
         parent::__construct($serializer, $validator);
     }
 
-    #[Route('/syndic/building/{buildingId}', methods: ['GET'], name: 'syndic_by_building')]
-    public function getSyndicByBuilding(int $buildingId): JsonResponse
+    #[Route('/syndic/{userId}/building', methods: ['GET'], name: 'syndic_by_building')]
+    public function getSyndicByBuilding(int $userId): JsonResponse
     {
-        $syndic = $this->userService->getSyndicByBuildingId($buildingId);
+        $syndic = $this->userService->getBuildingBySyndic($userId);
 
         if (!$syndic) {
             throw new NotFoundHttpException('No syndic found for this building');

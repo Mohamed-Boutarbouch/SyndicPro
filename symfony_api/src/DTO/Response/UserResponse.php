@@ -20,6 +20,9 @@ class UserResponse
     public ?string $lastName;
 
     #[Groups(['user:syndic', 'user:default'])]
+    public ?string $fullName;
+
+    #[Groups(['user:syndic', 'user:default'])]
     public array $roles = [];
 
     #[Groups(['user:syndic', 'user:default'])]
@@ -29,45 +32,30 @@ class UserResponse
     public bool $isActive;
 
     #[Groups(['user:syndic'])]
+    public ?BuildingResponse $building = null;
+
+    #[Groups(['user:syndic'])]
     public ?int $buildingId;
 
     #[Groups(['user:default'])]
     public ?int $syndicId;
 
-    public function __construct(
-        int $id,
-        string $email,
-        ?string $firstName,
-        ?string $lastName,
-        ?string $phoneNumber,
-        bool $isActive,
-        ?int $buildingId,
-        ?int $syndicId,
-        array $roles
-    ) {
-        $this->id = $id;
-        $this->email = $email;
-        $this->firstName = $firstName;
-        $this->lastName = $lastName;
-        $this->phoneNumber = $phoneNumber;
-        $this->isActive = $isActive;
-        $this->buildingId = $buildingId;
-        $this->syndicId = $syndicId;
-        $this->roles = $roles;
-    }
-
     public static function fromEntity(User $user): self
     {
-        return new self(
-            $user->getId(),
-            $user->getEmail(),
-            $user->getFirstName(),
-            $user->getLastName(),
-            $user->getPhoneNumber(),
-            $user->isActive() ?? false,
-            $user->getBuilding()?->getId(),
-            $user->getSyndic()?->getId(),
-            $user->getRoles()
-        );
+        $dto = new self();
+        $dto->id = $user->getId();
+        $dto->email = $user->getEmail();
+        $dto->firstName = $user->getFirstName();
+        $dto->lastName = $user->getLastName();
+        $dto->fullName = trim(($user->getFirstName() ?? '') . ' ' . ($user->getLastName() ?? ''));
+        $dto->phoneNumber = $user->getPhoneNumber();
+        $dto->roles = $user->getRoles();
+        $dto->syndicId = $user->getSyndic()?->getId();
+
+        if ($user->getBuilding()) {
+            $dto->building = BuildingResponse::fromEntity($user->getBuilding());
+        }
+
+        return $dto;
     }
 }

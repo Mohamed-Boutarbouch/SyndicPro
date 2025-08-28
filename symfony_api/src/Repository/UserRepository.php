@@ -33,38 +33,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
-    public function findSyndicByBuilding(int $buildingId): ?User
+    public function findBuildingBySyndic(int $userId): ?User
     {
         return $this->createQueryBuilder('u')
-            ->where('u.building = :buildingId')
+            ->leftJoin('u.building', 'b')
+            ->addSelect('b')
+            ->where('u.id = :userId')
             ->andWhere('u.syndic IS NULL')
-            ->setParameter('buildingId', $buildingId)
+            ->setParameter('userId', $userId)
             ->getQuery()
             ->getOneOrNullResult();
     }
-
-    //    /**
-    //     * @return User[] Returns an array of User objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('u.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?User
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
 }
