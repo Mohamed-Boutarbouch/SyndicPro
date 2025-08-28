@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\DTO\Response\DashboardResponse;
 use App\Repository\BuildingRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -14,7 +13,7 @@ class DashboardService
     ) {
     }
 
-    public function getCardStats(int $buildingId): DashboardResponse
+    public function getCardStats(int $buildingId): array
     {
         return $this->buildingRepository->getBuildingCardStats($buildingId);
     }

@@ -17,7 +17,7 @@ class BuildingRepository extends ServiceEntityRepository
         parent::__construct($registry, Building::class);
     }
 
-    public function getBuildingCardStats(int $buildingId): DashboardResponse
+    public function getBuildingCardStats(int $buildingId): array
     {
         $em = $this->getEntityManager();
 
@@ -111,10 +111,7 @@ class BuildingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getArrayResult();
 
-        // echo json_encode($activeUnits, JSON_PRETTY_PRINT);
-        // die();
-
-        return new DashboardResponse([
+        return [
             'currentBalance' => $currentBalance,
             'lastMonthBalance' => $lastMonthBalance,
             'balancePercentChange' => $balancePercentChange,
@@ -124,6 +121,6 @@ class BuildingRepository extends ServiceEntityRepository
             'totalPendingItems' => $totalPendingItems,
             'totalPendingAmount' => $totalPendingAmount,
             'activeUnits' => $activeUnits,
-        ]);
+        ];
     }
 }

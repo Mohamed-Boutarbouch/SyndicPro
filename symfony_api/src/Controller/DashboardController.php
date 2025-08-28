@@ -2,16 +2,18 @@
 
 namespace App\Controller;
 
+use App\DTO\Response\DashboardResponse;
 use App\Service\DashboardService;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/api/dashboard', name: 'api_dashboard_')]
-final class DashboardController extends AbstractApiController
+final class DashboardController extends AbstractController
 {
-    public function __construct(private DashboardService $dashboardService)
-    {
+    public function __construct(
+        private DashboardService $dashboardService
+    ) {
     }
 
     #[Route('/building/{buildingId}', methods: ['GET'], name: 'cards')]
@@ -19,16 +21,11 @@ final class DashboardController extends AbstractApiController
     {
         $stats = $this->dashboardService->getCardStats($buildingId);
 
-        return new JsonResponse([
-            'currentBalance' => $stats->currentBalance,
-            'lastMonthBalance' => $stats->lastMonthBalance,
-            'balancePercentChange' => $stats->balancePercentChange,
-            'currentMonthIncome' => $stats->currentMonthIncome,
-            'previousMonthIncome' => $stats->previousMonthIncome,
-            'incomePercentChange' => $stats->incomePercentChange,
-            'totalPendingItems' => $stats->totalPendingItems,
-            'totalPendingAmount' => $stats->totalPendingAmount,
-            'activeUnits' => $stats->activeUnits,
-        ]);
+        return $this->json(
+            DashboardResponse::fromData($stats),
+            200,
+            [],
+            ['groups' => ['dashboard:default']]
+        );
     }
 }
