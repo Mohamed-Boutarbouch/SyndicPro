@@ -20,6 +20,9 @@ class UserResponse
     public ?string $lastName;
 
     #[Groups(['user:syndic', 'user:default'])]
+    public array $roles = [];
+
+    #[Groups(['user:syndic', 'user:default'])]
     public ?string $phoneNumber;
 
     #[Groups(['user:syndic', 'user:default'])]
@@ -39,7 +42,8 @@ class UserResponse
         ?string $phoneNumber,
         bool $isActive,
         ?int $buildingId,
-        ?int $syndicId
+        ?int $syndicId,
+        array $roles
     ) {
         $this->id = $id;
         $this->email = $email;
@@ -49,6 +53,7 @@ class UserResponse
         $this->isActive = $isActive;
         $this->buildingId = $buildingId;
         $this->syndicId = $syndicId;
+        $this->roles = $roles;
     }
 
     public static function fromEntity(User $user): self
@@ -61,7 +66,8 @@ class UserResponse
             $user->getPhoneNumber(),
             $user->isActive() ?? false,
             $user->getBuilding()?->getId(),
-            $user->getSyndic()?->getId()
+            $user->getSyndic()?->getId(),
+            $user->getRoles()
         );
     }
 }
