@@ -123,4 +123,77 @@ class BuildingRepository extends ServiceEntityRepository
             'totalActiveUnits' => $totalActiveUnits
         ];
     }
+
+    /**
+     * Get financial summary for the last 6 months
+     */
+    public function getFinancialSummaryLast6Months(int $buildingId): array
+    {
+
+        $em = $this->getEntityManager();
+
+        // $endDate = new \DateTime('last day of this month');
+        // $startDate = (clone $endDate)->modify('-5 months')->modify('first day of this month');
+
+        $currentYear = (int) date('Y');
+        $startDate = new \DateTime("$currentYear-01-01"); // January 1st
+        $endDate   = new \DateTime("$currentYear-06-30"); // June 30th
+
+        $results = $em->createQueryBuilder()
+            ->select([
+                "SUBSTRING(t.date, 1, 4) as year",  // first 4 chars = year
+                "SUBSTRING(t.date, 6, 2) as month", // chars 6-7 = month
+                'SUM(CASE WHEN t.type = :income AND t.status = :approved THEN t.amount ELSE 0 END) as income',
+                'SUM(CASE WHEN t.type = :expense AND t.status IN (:expenseStatuses) THEN t.amount ELSE 0 END) as expenses'
+            ])
+            ->from('App\Entity\Transaction', 't')
+            ->where('t.building = :buildingId')
+            ->andWhere('t.date >= :startDate')
+            ->andWhere('t.date <= :endDate')
+            ->groupBy('year, month')
+            ->orderBy('year', 'ASC')
+            ->addOrderBy('month', 'ASC')
+            ->setParameter('buildingId', $buildingId)
+            ->setParameter('startDate', $startDate->format('Y-m-d'))
+            ->setParameter('endDate', $endDate->format('Y-m-d'))
+            ->setParameter('income', 'income')
+            ->setParameter('expense', 'expense')
+            ->setParameter('approved', 'approved')
+            ->setParameter('expenseStatuses', ['approved', 'paid'])
+            ->getQuery()
+            ->getArrayResult();
+
+        return $this->transformToMonthlyFormat($results, $startDate, $endDate);
+    }
+
+    /**
+     * Transform database results to monthly format with month names
+     */
+    private function transformToMonthlyFormat(array $results, \DateTime $startDate, \DateTime $endDate): array
+    {
+        $monthlyData = [];
+        $currentDate = clone $startDate;
+
+        // Create array with all months in range, using leading zero
+        while ($currentDate <= $endDate) {
+            $monthKey = $currentDate->format('Y-m'); // e.g., "2025-01"
+            $monthlyData[$monthKey] = [
+                'month' => $currentDate->format('F'),
+                'income' => 0.0,
+                'expenses' => 0.0
+            ];
+            $currentDate->modify('first day of next month');
+        }
+
+        // Fill in actual data from query results
+        foreach ($results as $row) {
+            $monthKey = $row['year'] . '-' . $row['month']; // e.g., "2025-01"
+            if (isset($monthlyData[$monthKey])) {
+                $monthlyData[$monthKey]['income'] = (float) $row['income'];
+                $monthlyData[$monthKey]['expenses'] = (float) $row['expenses'];
+            }
+        }
+
+        return ['monthlyIncomeExpenses' => array_values($monthlyData)];
+    }
 }

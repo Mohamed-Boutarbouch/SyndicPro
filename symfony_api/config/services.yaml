@@ -17,5 +17,8 @@ services:
         resource: "../src/"
 
     App\EventListener\ExceptionListener:
+        arguments:
+            $environment: "%kernel.environment%"
+            $logger: "@logger"
         tags:
             - { name: kernel.event_listener, event: kernel.exception }

@@ -16,16 +16,32 @@ final class DashboardController extends AbstractController
     ) {
     }
 
-    #[Route('/building/{buildingId}', methods: ['GET'], name: 'cards')]
-    public function index(int $buildingId): Response
+    #[Route('/building/{buildingId}/cards', methods: ['GET'], name: 'cards')]
+    public function cards(int $buildingId): Response
     {
+
+        // echo json_encode($this->dashboardService->getCardStats($buildingId));
+        // die();
         $stats = $this->dashboardService->getCardStats($buildingId);
 
         return $this->json(
             DashboardResponse::fromData($stats),
             200,
             [],
-            ['groups' => ['dashboard:default']]
+            ['groups' => ['dashboard:card']]
+        );
+    }
+
+    #[Route('/building/{buildingId}/income-expenses', methods: ['GET'], name: 'income_expenses')]
+    public function incomeAndExpenses(int $buildingId): Response
+    {
+        $stats = $this->dashboardService->getIncomeExpenses($buildingId);
+
+        return $this->json(
+            DashboardResponse::fromData($stats),
+            200,
+            [],
+            ['groups' => ['dashboard:income-expenses']]
         );
     }
 }

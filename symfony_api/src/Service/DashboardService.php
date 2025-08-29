@@ -17,4 +17,9 @@ class DashboardService
     {
         return $this->buildingRepository->getBuildingCardStats($buildingId);
     }
+
+    public function getIncomeExpenses(int $buildingId): array
+    {
+        return $this->buildingRepository->getFinancialSummaryLast6Months($buildingId);
+    }
 }

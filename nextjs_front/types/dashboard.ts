@@ -15,3 +15,13 @@ export interface DashboardCardResponse {
   totalPendingItems: number;
   totalActiveUnits: number;
 };
+
+export interface MonthlyIncomeExpensesItem {
+  month: string;
+  income: number;
+  expenses: number;
+}
+
+export interface MonthlyIncomeExpensesResponse {
+  monthlyIncomeExpenses: MonthlyIncomeExpensesItem[];
+}
