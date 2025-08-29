@@ -3,7 +3,7 @@ export interface ActiveUnit {
   type: 'apartment' | 'commercial_local' | 'other';
 };
 
-export interface DashboardResponse {
+export interface DashboardCardResponse {
   activeUnits: ActiveUnit[];
   balancePercentChange: number | null;
   currentBalance: number;
@@ -13,4 +13,5 @@ export interface DashboardResponse {
   previousMonthIncome: number;
   totalPendingAmount: number;
   totalPendingItems: number;
+  totalActiveUnits: number;
 };

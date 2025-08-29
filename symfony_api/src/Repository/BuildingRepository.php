@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\DTO\Response\DashboardResponse;
 use App\Entity\Building;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -31,8 +30,6 @@ class BuildingRepository extends ServiceEntityRepository
             ->setParameter('status', 'approved')
             ->getQuery()
             ->getSingleScalarResult();
-
-
 
         $lastMonthBalance = (float) $em->createQueryBuilder()
             ->select('SUM(CASE WHEN t.type = \'income\' THEN t.amount ELSE -t.amount END)')
@@ -111,6 +108,8 @@ class BuildingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getArrayResult();
 
+        $totalActiveUnits = array_sum(array_column($activeUnits, 'count'));
+
         return [
             'currentBalance' => $currentBalance,
             'lastMonthBalance' => $lastMonthBalance,
@@ -121,6 +120,7 @@ class BuildingRepository extends ServiceEntityRepository
             'totalPendingItems' => $totalPendingItems,
             'totalPendingAmount' => $totalPendingAmount,
             'activeUnits' => $activeUnits,
+            'totalActiveUnits' => $totalActiveUnits
         ];
     }
 }

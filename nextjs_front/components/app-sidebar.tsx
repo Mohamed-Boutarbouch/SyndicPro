@@ -76,8 +76,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <Link href="/">
-                <IconBuilding className="!size-5" />
-                <span className="text-base font-semibold">SyndicPro</span>
+                <IconBuilding className="!size-8 text-primary" />
+                <span className="text-2xl font-semibold text-primary">SyndicPro</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

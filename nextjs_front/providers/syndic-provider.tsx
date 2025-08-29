@@ -8,8 +8,9 @@ import type { User } from "@/types/syndic";
 const SyndicContext = createContext<User | null>(null);
 
 export function SyndicProvider({ children }: { children: React.ReactNode }) {
-  const { data } = useSWR<User>("/users/syndic/1/building", () =>
-    fetchSyndic(1)
+  const { data, error, isLoading } = useSWR<User>(
+    "/users/syndic/1/building",
+    () => fetchSyndic(1)
   );
 
   return (

@@ -33,6 +33,9 @@ class DashboardResponse
     #[Groups(['dashboard:default'])]
     public array $activeUnits = [];
 
+    #[Groups(['dashboard:default'])]
+    public int $totalActiveUnits = 0;
+
     /**
      * Creates a DashboardResponse from an array of calculated data.
      */
@@ -52,6 +55,8 @@ class DashboardResponse
         $dto->totalPendingAmount = $data['totalPendingAmount'] ?? 0.0;
 
         $dto->activeUnits = $data['activeUnits'] ?? [];
+
+        $dto->totalActiveUnits = $data['totalActiveUnits'] ?? 0;
 
         return $dto;
     }
