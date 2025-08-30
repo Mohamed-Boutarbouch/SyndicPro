@@ -2,6 +2,7 @@
 
 namespace App\DTO\Response;
 
+use App\Enum\ExpenseCategory;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 class DashboardResponse
@@ -39,6 +40,24 @@ class DashboardResponse
     #[Groups(['dashboard:income-expenses'])]
     public array $monthlyIncomeExpenses = [];
 
+    #[Groups(['dashboard:expenses-distribution'])]
+    public array $expensesDistribution = [];
+
+    /**
+     * Get display name for an expense category
+     */
+    private function getExpenseDisplayName(ExpenseCategory $category): string
+    {
+        return match ($category) {
+            ExpenseCategory::COMMON_AREA => 'Maintenance',
+            ExpenseCategory::WATER_ELECTRICITY => 'Utilities',
+            ExpenseCategory::PERSONNEL => 'Personnel',
+            ExpenseCategory::SYNDIC_ADMIN => 'Administration',
+            ExpenseCategory::SYNDIC_REMUNERATION => 'Remuneration',
+            ExpenseCategory::OTHER => 'Other',
+        };
+    }
+
     /**
      * Creates a DashboardResponse from an array of calculated data.
      */
@@ -57,6 +76,47 @@ class DashboardResponse
         $dto->totalActiveUnits = $data['totalActiveUnits'] ?? 0;
         $dto->monthlyIncomeExpenses = $data['monthlyIncomeExpenses'] ?? [];
 
+        //$dto->expensesDistribution = $data['expensesDistribution'] ?? [];
+        // Transform expenses distribution with proper naming
+        $dto->expensesDistribution = $dto->transformExpensesDistribution($data['expensesDistribution'] ?? []);
+
         return $dto;
+    }
+
+    /**
+     * Transform expenses distribution array to use display names
+     */
+    private function transformExpensesDistribution(array $expenses): array
+    {
+        $transformed = [];
+
+        foreach ($expenses as $expense) {
+            $originalName = $expense['name'] ?? '';
+
+            // Determine display name
+            if ($originalName instanceof ExpenseCategory) {
+                $displayName = $this->getExpenseDisplayName($originalName);
+            } else {
+                // Try to convert string to enum
+                $category = ExpenseCategory::tryFrom($originalName);
+                $displayName = $category ? $this->getExpenseDisplayName($category) : $originalName;
+            }
+
+            $transformed[] = [
+                'name' => $displayName,
+                'value' => (float) ($expense['value'] ?? 0.0)
+            ];
+        }
+
+        return $transformed;
+    }
+
+    /**
+     * Get the display name for an expense type by string value
+     */
+    public static function getExpenseDisplayNameByString(string $internalName): string
+    {
+        $category = ExpenseCategory::tryFrom($internalName);
+        return $category ? (new self())->getExpenseDisplayName($category) : $internalName;
     }
 }

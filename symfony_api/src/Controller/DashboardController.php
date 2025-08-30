@@ -19,9 +19,6 @@ final class DashboardController extends AbstractController
     #[Route('/building/{buildingId}/cards', methods: ['GET'], name: 'cards')]
     public function cards(int $buildingId): Response
     {
-
-        // echo json_encode($this->dashboardService->getCardStats($buildingId));
-        // die();
         $stats = $this->dashboardService->getCardStats($buildingId);
 
         return $this->json(
@@ -42,6 +39,21 @@ final class DashboardController extends AbstractController
             200,
             [],
             ['groups' => ['dashboard:income-expenses']]
+        );
+    }
+
+    #[Route('/building/{buildingId}/expenses-distribution', methods: ['GET'], name: 'expenses_distribution')]
+    public function expensesDistribution(int $buildingId): Response
+    {
+        $stats = $this->dashboardService->getExpensesDistribution($buildingId);
+
+        // echo json_encode($stats);
+        // die();
+        return $this->json(
+            DashboardResponse::fromData($stats),
+            200,
+            [],
+            ['groups' => ['dashboard:expenses-distribution']]
         );
     }
 }

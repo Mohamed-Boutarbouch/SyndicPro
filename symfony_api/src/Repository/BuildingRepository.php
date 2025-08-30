@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Building;
+use App\Entity\Transaction;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -195,5 +196,31 @@ class BuildingRepository extends ServiceEntityRepository
         }
 
         return ['monthlyIncomeExpenses' => array_values($monthlyData)];
+    }
+
+    public function getExpensesDistributionByBuilding(int $buildingId): array
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('t.expense_category AS name', 'SUM(t.amount) AS value')
+            ->from(Transaction::class, 't')
+            ->where('t.building = :buildingId')
+            ->andWhere('t.type = :type')
+            ->andWhere($qb->expr()->in('t.status', ':statuses'))
+            ->setParameter('buildingId', $buildingId)
+            ->setParameter('type', 'expense')
+            ->setParameter('statuses', ['approved', 'paid'])
+            ->groupBy('t.expense_category');
+
+        $results = $qb->getQuery()->getArrayResult();
+
+        $expensesDistribution = array_map(function ($item) {
+            return [
+                'name' => $item['name'],
+                'value' => (float) $item['value']
+            ];
+        }, $results);
+
+        return ['expensesDistribution' => $expensesDistribution];
     }
 }

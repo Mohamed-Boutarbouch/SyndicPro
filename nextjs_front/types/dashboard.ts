@@ -25,3 +25,13 @@ export interface MonthlyIncomeExpensesItem {
 export interface MonthlyIncomeExpensesResponse {
   monthlyIncomeExpenses: MonthlyIncomeExpensesItem[];
 }
+
+export interface ExpensesDistributionItem {
+  name: string;
+  value: number;
+}
+
+export interface ExpensesDistributionResponse {
+  expensesDistribution: ExpensesDistributionItem[];
+}
+

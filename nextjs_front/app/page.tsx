@@ -3,10 +3,12 @@
 import useSWR from "swr";
 import { SectionCards } from "@/components/section-cards";
 import { useSyndic } from "@/providers/syndic-provider";
-import { DashboardCardResponse, MonthlyIncomeExpensesResponse } from "@/types/dashboard";
+import { DashboardCardResponse, ExpensesDistributionResponse, MonthlyIncomeExpensesResponse } from "@/types/dashboard";
 import { fetchDashboardStats } from "@/services/fetchCardStats";
 import { fetchMonthlyIncomeExpenses } from "@/services/fetchMonthlyIncomeExpenses";
 import { ChartMonthlyIncomeExpenses } from "@/components/chart-monthly-income-expenses";
+import { ChartPieDonutExpenses } from "@/components/chart-pie-expenses";
+import { fetchExpensesDistribution } from "@/services/fetch-expenses-distribution";
 
 export default function Page() {
   const syndic = useSyndic();
@@ -22,19 +24,28 @@ export default function Page() {
     () => fetchMonthlyIncomeExpenses(buildingId!)
   );
 
+  const { data: expensesData, error: expensesError, isLoading: expensesLoading } = useSWR<ExpensesDistributionResponse>(
+    dashboardData ? [`/dashboard/building/${buildingId}/expenses-distribution`, buildingId] : null,
+    () => fetchExpensesDistribution(buildingId!)
+  );
+
   if (!syndic) return <p>Loading syndic...</p>;
   if (dashboardLoading) return <p>Loading dashboard...</p>;
   if (dashboardError) return <p>Error loading dashboard</p>;
   if (monthlyLoading) return <p>Loading monthly data...</p>;
   if (monthlyError) return <p>Error loading monthly data</p>;
+  if (expensesLoading) return <p>Loading monthly data...</p>;
+  if (expensesError) return <p>Error loading monthly data</p>;
 
+  console.log(expensesData)
   return (
     <div className="flex flex-1 flex-col">
       <div className="@container/main flex flex-1 flex-col gap-2">
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
           <SectionCards cardStats={dashboardData!} />
-          <div className="px-4 lg:px-6">
+          <div className="px-4 lg:px-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
             <ChartMonthlyIncomeExpenses monthlyData={monthlyData!.monthlyIncomeExpenses} />
+            <ChartPieDonutExpenses expensesData={expensesData!.expensesDistribution} />
           </div>
         </div>
       </div>
