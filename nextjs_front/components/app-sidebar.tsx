@@ -7,6 +7,7 @@ import {
   IconDashboard,
   IconFolder,
   IconListDetails,
+  IconReportMoney,
   IconSettings,
   IconUsers,
 } from "@tabler/icons-react"
@@ -34,9 +35,9 @@ const data = {
       icon: IconDashboard,
     },
     {
-      title: "Lifecycle",
-      url: "#",
-      icon: IconListDetails,
+      title: "Contributions",
+      url: "/contributions",
+      icon: IconReportMoney,
     },
     {
       title: "Analytics",
