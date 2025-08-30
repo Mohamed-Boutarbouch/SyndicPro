@@ -9,6 +9,7 @@ import { fetchMonthlyIncomeExpenses } from "@/services/fetchMonthlyIncomeExpense
 import { ChartMonthlyIncomeExpenses } from "@/components/chart-monthly-income-expenses";
 import { ChartPieDonutExpenses } from "@/components/chart-pie-expenses";
 import { fetchExpensesDistribution } from "@/services/fetch-expenses-distribution";
+import { TransactionDataTable } from "@/components/transaction-data-table";
 
 export default function Page() {
   const syndic = useSyndic();
@@ -41,12 +42,13 @@ export default function Page() {
   return (
     <div className="flex flex-1 flex-col">
       <div className="@container/main flex flex-1 flex-col gap-2">
-        <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+        <div className="flex flex-col gap-4 p-8 md:gap-6 md:p-10">
           <SectionCards cardStats={dashboardData!} />
-          <div className="px-4 lg:px-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <ChartMonthlyIncomeExpenses monthlyData={monthlyData!.monthlyIncomeExpenses} />
             <ChartPieDonutExpenses expensesData={expensesData!.expensesDistribution} />
           </div>
+          <TransactionDataTable />
         </div>
       </div>
     </div>
