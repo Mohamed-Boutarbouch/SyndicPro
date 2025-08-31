@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog"
 import { PaymentRecordForm } from "./forms/register-payment-form"
 import { useSyndic } from "@/providers/syndic-provider"
+import { Plus } from "lucide-react";
 
 export function RegisterPaymentDialog() {
   const syndic = useSyndic();
@@ -18,9 +19,14 @@ export function RegisterPaymentDialog() {
 
   return (
     <Dialog>
-      <DialogTrigger asChild className="w-24">
-        <Button variant="outline">Record Payment</Button>
-      </DialogTrigger>
+      <div className="flex justify-end">
+        <DialogTrigger asChild>
+          <Button size="lg" className="text-black bg-primary hover:cursor-pointer w-40">
+            <Plus className="h-4 w-4 mr-2" />
+            Record Payment
+          </Button>
+        </DialogTrigger>
+      </div>
 
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>

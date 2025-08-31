@@ -3,4 +3,5 @@ export interface ResidentsFormResponse {
   lastName: string;
   number: string;
   unitId: number;
+  expectedPayment: number;
 }

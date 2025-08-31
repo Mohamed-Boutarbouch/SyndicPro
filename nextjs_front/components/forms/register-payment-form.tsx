@@ -33,6 +33,7 @@ import { format } from "date-fns"
 import useSWR from "swr"
 import { api } from "@/lib/axios"
 import { ResidentsFormResponse } from "@/types/building"
+import { useEffect } from "react"
 
 export const recordPaymentSchema = z.object({
   unitId: z.string().min(1, "Unit is required."),
@@ -44,7 +45,6 @@ export const recordPaymentSchema = z.object({
     .refine((date) => !isNaN(date.getTime()), { message: "Invalid date" }),
 
   paymentMethod: z.enum([
-    "",
     "bank_transfer",
     "check",
     "cash",
@@ -65,24 +65,43 @@ export type RecordPaymentSchema = z.infer<typeof recordPaymentSchema>
 const fetcher = (url: string): Promise<ResidentsFormResponse[]> => api.get(url).then((res) => res.data)
 
 export function PaymentRecordForm({ buildingId }: { buildingId: number }) {
-  const form = useForm<z.infer<typeof recordPaymentSchema>>({
-    resolver: zodResolver(recordPaymentSchema),
-    defaultValues: {
-      unitId: "",
-      amount: 0.0,
-      paymentDate: new Date(),
-      paymentMethod: "",
-      reference: "",
-      notes: "",
-    },
-  })
-
   const { data: residents, error, isLoading } = useSWR<ResidentsFormResponse[]>(
     buildingId ? `/buildings/${buildingId}/residents` : null,
     fetcher
   )
 
-  function onSubmit(values: z.infer<typeof recordPaymentSchema>) {
+  const form = useForm<z.infer<typeof recordPaymentSchema>>({
+    resolver: zodResolver(recordPaymentSchema),
+    defaultValues: {
+      unitId: "",
+      amount: 0.00,
+      paymentDate: new Date(),
+      paymentMethod: "cash",
+      reference: "",
+      notes: "",
+    },
+  })
+
+  const unitId = form.watch("unitId")
+  const selectedResident = residents?.find(r => r.unitId.toString() === unitId)
+
+  useEffect(() => {
+    if (selectedResident) {
+      form.setValue("amount", Number(selectedResident.expectedPayment))
+    }
+  }, [selectedResident])
+
+  function onSubmit(values: RecordPaymentSchema) {
+    const unitId = values.unitId
+    const selectedResident = residents?.find(r => r.unitId.toString() === unitId)
+
+    // If notes is empty, auto-construct it
+    if (selectedResident && !values.notes) {
+      const dateStr = format(values.paymentDate, "PPP")
+      const residentName = `${selectedResident.firstName} ${selectedResident.lastName}`
+      values.notes = `Payment of ${values.amount.toFixed(2)} MAD from ${residentName} via ${values.paymentMethod.replace('_', ' ')} on ${dateStr}${values.reference ? ` (Ref: ${values.reference})` : ''}.`
+    }
+
     console.log(values)
   }
 
@@ -248,7 +267,7 @@ export function PaymentRecordForm({ buildingId }: { buildingId: number }) {
           )}
         />
 
-        <Button type="submit">Record Payment</Button>
+        <Button type="submit" className="text-black bg-primary hover:cursor-pointer">Record Payment</Button>
       </form>
     </Form>
   )

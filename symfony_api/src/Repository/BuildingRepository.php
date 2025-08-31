@@ -229,9 +229,19 @@ class BuildingRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('b')
             ->innerJoin('b.units', 'u')
             ->innerJoin('u.user', 'usr')
+            ->innerJoin('u.contributionSchedules', 'cd')
             ->where('b.id = :buildingId')
             ->setParameter('buildingId', $buildingId)
-            ->select('usr.id AS userId, usr.firstName, usr.lastName, usr.email, u.id AS unitId, u.number, u.type AS unitType')
+            ->select('
+            usr.id AS userId,
+            usr.firstName,
+            usr.lastName,
+            usr.email,
+            u.id AS unitId,
+            u.number,
+            u.type AS unitType,
+            cd.amountPerPayment AS expectedPayment
+        ')
             ->getQuery()
             ->getArrayResult();
     }

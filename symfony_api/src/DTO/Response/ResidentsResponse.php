@@ -38,12 +38,13 @@ class ResidentsResponse
     {
         $dto = new self();
 
-        $dto->unitId    = (int)   ($data['unitId'] ?? 0);
-        $dto->userId    = (int)   ($data['userId'] ?? 0);
-        $dto->firstName = (string)($data['firstName'] ?? '');
-        $dto->lastName  = (string)($data['lastName'] ?? '');
-        $dto->email     = (string)($data['email'] ?? '');
-        $dto->number    = (string)($data['number'] ?? '');
+        $dto->unitId          = (int)     ($data['unitId'] ?? 0);
+        $dto->userId          = (int)     ($data['userId'] ?? 0);
+        $dto->firstName       = (string)  ($data['firstName'] ?? '');
+        $dto->lastName        = (string)  ($data['lastName'] ?? '');
+        $dto->email           = (string)  ($data['email'] ?? '');
+        $dto->number          = (string)  ($data['number'] ?? '');
+        $dto->expectedPayment = (float)   ($data['expectedPayment'] ?? 0.00);
 
         $dto->unitType  = $data['unitType'] instanceof UnitType
             ? $data['unitType']->value
