@@ -34,4 +34,3 @@ export interface ExpensesDistributionItem {
 export interface ExpensesDistributionResponse {
   expensesDistribution: ExpensesDistributionItem[];
 }
-

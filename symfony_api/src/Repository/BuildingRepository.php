@@ -223,4 +223,16 @@ class BuildingRepository extends ServiceEntityRepository
 
         return ['expensesDistribution' => $expensesDistribution];
     }
+
+    public function getResidentsByBuilding(int $buildingId): array
+    {
+        return $this->createQueryBuilder('b')
+            ->innerJoin('b.units', 'u')
+            ->innerJoin('u.user', 'usr')
+            ->where('b.id = :buildingId')
+            ->setParameter('buildingId', $buildingId)
+            ->select('usr.id AS userId, usr.firstName, usr.lastName, usr.email, u.id AS unitId, u.number, u.type AS unitType')
+            ->getQuery()
+            ->getArrayResult();
+    }
 }

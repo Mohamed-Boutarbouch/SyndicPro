@@ -6,7 +6,6 @@ import {
   IconChartBar,
   IconDashboard,
   IconFolder,
-  IconListDetails,
   IconReportMoney,
   IconSettings,
   IconUsers,

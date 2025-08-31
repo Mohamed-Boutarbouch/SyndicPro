@@ -17,7 +17,7 @@ final class ContributionController extends AbstractController
     }
 
     #[Route('/building/{buildingId}/schedule', methods: ['GET'], name: 'schedule')]
-    public function cards(int $buildingId): Response
+    public function schedule(int $buildingId): Response
     {
         $stats = $this->unitRepository->getContributionOverviewByBuilding($buildingId);
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { ContributionDataTable, ContributionScheduleResponse } from "@/components/contribution-data-table";
+import { RegisterPaymentDialog } from "@/components/register-payment-dialog";
 import { useSyndic } from "@/providers/syndic-provider";
 import { fetchContributionSchedule } from "@/services/fetch-contribution-schedule";
 import useSWR from "swr";
@@ -19,6 +20,7 @@ export default function ContributionPage() {
 
   return (
     <div className="flex flex-col gap-4 p-8 md:gap-6 md:p-10">
+      <RegisterPaymentDialog />
       <ContributionDataTable data={data || []} />
     </div>
   );
