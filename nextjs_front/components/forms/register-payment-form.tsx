@@ -30,20 +30,19 @@ import { cn } from "@/lib/utils"
 import { CalendarIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns"
+import useSWRMutation from "swr/mutation"
 import useSWR from "swr"
 import { api } from "@/lib/axios"
 import { ResidentsFormResponse } from "@/types/building"
 import { useEffect } from "react"
+import { createPaymentRecord } from "@/services/create-record-payment"
 
 export const recordPaymentSchema = z.object({
   unitId: z.string().min(1, "Unit is required."),
-
   amount: z.number().positive("Amount must be greater than zero."),
-
   paymentDate: z
     .instanceof(Date, { message: "Invalid date" })
     .refine((date) => !isNaN(date.getTime()), { message: "Invalid date" }),
-
   paymentMethod: z.enum([
     "bank_transfer",
     "check",
@@ -51,9 +50,7 @@ export const recordPaymentSchema = z.object({
     "credit_card",
     "other",
   ]),
-
   reference: z.string().optional(),
-
   notes: z
     .string()
     .max(500, "Notes must be 500 characters or less.")
@@ -65,10 +62,15 @@ export type RecordPaymentSchema = z.infer<typeof recordPaymentSchema>
 const fetcher = (url: string): Promise<ResidentsFormResponse[]> => api.get(url).then((res) => res.data)
 
 export function PaymentRecordForm({ buildingId }: { buildingId: number }) {
-  const { data: residents, error, isLoading } = useSWR<ResidentsFormResponse[]>(
+  const { data: residents, error: residentsError, isLoading } = useSWR<ResidentsFormResponse[]>(
     buildingId ? `/buildings/${buildingId}/residents` : null,
     fetcher
   )
+
+  const { trigger, isMutating, error: mutationError } = useSWRMutation(
+    `/buildings/${buildingId}/payment/contribution`,
+    createPaymentRecord
+  );
 
   const form = useForm<z.infer<typeof recordPaymentSchema>>({
     resolver: zodResolver(recordPaymentSchema),
@@ -89,20 +91,50 @@ export function PaymentRecordForm({ buildingId }: { buildingId: number }) {
     if (selectedResident) {
       form.setValue("amount", Number(selectedResident.expectedPayment))
     }
-  }, [selectedResident])
+  }, [selectedResident, form])
 
-  function onSubmit(values: RecordPaymentSchema) {
-    const unitId = values.unitId
-    const selectedResident = residents?.find(r => r.unitId.toString() === unitId)
+  async function onSubmit(values: RecordPaymentSchema) {
+    try {
+      const unitId = values.unitId;
+      const selectedResident = residents?.find(r => r.unitId.toString() === unitId);
 
-    // If notes is empty, auto-construct it
-    if (selectedResident && !values.notes) {
-      const dateStr = format(values.paymentDate, "PPP")
-      const residentName = `${selectedResident.firstName} ${selectedResident.lastName}`
-      values.notes = `Payment of ${values.amount.toFixed(2)} MAD from ${residentName} via ${values.paymentMethod.replace('_', ' ')} on ${dateStr}${values.reference ? ` (Ref: ${values.reference})` : ''}.`
+      if (selectedResident && !values.notes) {
+        const dateStr = format(values.paymentDate, "PPP");
+        const residentName = `${selectedResident.firstName} ${selectedResident.lastName}`;
+        values.notes = `Payment of ${values.amount.toFixed(2)} MAD from ${residentName} via ${values.paymentMethod.replace('_', ' ')} on ${dateStr}${values.reference ? ` (Ref: ${values.reference})` : ''}.`;
+      }
+
+      const payload = {
+        ...values,
+        unitId: parseInt(values.unitId, 10),
+        paymentDate: values.paymentDate.toISOString(),
+      }
+
+      console.log("Submitting payload:", payload);
+
+      // Execute the mutation
+      const result = await trigger(payload);
+
+      console.log("Payment recorded successfully:", result);
+
+      // Reset form on success
+      form.reset({
+        unitId: "",
+        amount: 0.00,
+        paymentDate: new Date(),
+        paymentMethod: "cash",
+        reference: "",
+        notes: "",
+      });
+
+      // You might want to show a success message here
+      // toast.success("Payment recorded successfully!");
+
+    } catch (error) {
+      console.error("Error recording payment:", error);
+      // You might want to show an error message here
+      // toast.error("Failed to record payment");
     }
-
-    console.log(values)
   }
 
   return (
@@ -121,7 +153,7 @@ export function PaymentRecordForm({ buildingId }: { buildingId: number }) {
                       placeholder={
                         isLoading
                           ? "Loading..."
-                          : error
+                          : residentsError
                             ? "Failed to load"
                             : "Select resident"
                       }
@@ -267,7 +299,19 @@ export function PaymentRecordForm({ buildingId }: { buildingId: number }) {
           )}
         />
 
-        <Button type="submit" className="text-black bg-primary hover:cursor-pointer">Record Payment</Button>
+        {mutationError && (
+          <div className="text-destructive text-sm">
+            Error: {mutationError.message || "Failed to record payment"}
+          </div>
+        )}
+
+        <Button
+          type="submit"
+          disabled={isMutating}
+          className="text-black bg-primary hover:cursor-pointer"
+        >
+          {isMutating ? "Recording..." : "Record Payment"}
+        </Button>
       </form>
     </Form>
   )

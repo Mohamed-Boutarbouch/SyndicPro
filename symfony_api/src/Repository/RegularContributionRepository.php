@@ -16,28 +16,12 @@ class RegularContributionRepository extends ServiceEntityRepository
         parent::__construct($registry, RegularContribution::class);
     }
 
-    //    /**
-    //     * @return RegularContribution[] Returns an array of RegularContribution objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('r.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?RegularContribution
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function findOneScheduleByUnitId(int $unitId): ?RegularContribution
+    {
+        return $this->createQueryBuilder('rc')
+            ->andWhere('rc.unit = :unitId')
+            ->setParameter('unitId', $unitId)
+            ->getQuery()
+            ->getOneOrNullResult(); // returns one entity or null
+    }
 }

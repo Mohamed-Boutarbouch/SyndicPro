@@ -38,7 +38,6 @@ export default function Page() {
   if (expensesLoading) return <p>Loading monthly data...</p>;
   if (expensesError) return <p>Error loading monthly data</p>;
 
-  console.log(expensesData)
   return (
     <div className="flex flex-1 flex-col">
       <div className="@container/main flex flex-1 flex-col gap-2">

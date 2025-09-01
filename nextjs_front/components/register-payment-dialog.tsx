@@ -10,13 +10,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { PaymentRecordForm } from "./forms/register-payment-form"
-import { useSyndic } from "@/providers/syndic-provider"
 import { Plus } from "lucide-react";
 
-export function RegisterPaymentDialog() {
-  const syndic = useSyndic();
-  const buildingId = syndic?.building?.id;
-
+export function RegisterPaymentDialog({ buildingId }: { buildingId: number }) {
   return (
     <Dialog>
       <div className="flex justify-end">

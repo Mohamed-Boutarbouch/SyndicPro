@@ -79,4 +79,23 @@ class UnitRepository extends ServiceEntityRepository
 
         return $results; // Return formatted arrays, not DTOs
     }
+
+    public function findByIdAndBuildingId(int $unitId, int $buildingId): ?array
+    {
+        return $this->createQueryBuilder('u')
+            ->select([
+                'u.id',
+                'u.number',
+                'u.type',
+                'u.floor',
+                'b.id as buildingId',
+            ])
+            ->join('u.building', 'b')
+            ->where('u.id = :unitId')
+            ->andWhere('b.id = :buildingId')
+            ->setParameter('unitId', $unitId)
+            ->setParameter('buildingId', $buildingId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

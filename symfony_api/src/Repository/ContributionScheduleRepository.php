@@ -15,4 +15,15 @@ class ContributionScheduleRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, ContributionSchedule::class);
     }
+
+    public function findByRegularContributionAndUnit(int $regularContributionId, int $unitId): ?ContributionSchedule
+    {
+        return $this->createQueryBuilder('cs')
+            ->andWhere('cs.regularContribution = :rcId')
+            ->andWhere('cs.unit = :unitId')
+            ->setParameter('rcId', $regularContributionId)
+            ->setParameter('unitId', $unitId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
