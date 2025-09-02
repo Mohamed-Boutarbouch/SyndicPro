@@ -21,14 +21,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { cn } from "@/lib/utils"
-import { CalendarIcon } from "lucide-react"
-import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns"
 import useSWRMutation from "swr/mutation"
 import useSWR from "swr"
@@ -36,19 +28,17 @@ import { api } from "@/lib/axios"
 import { ResidentsFormResponse } from "@/types/building"
 import { useEffect } from "react"
 import { createPaymentRecord } from "@/services/create-record-payment"
+import { toast } from "sonner"
 
 export const recordPaymentSchema = z.object({
   unitId: z.string().min(1, "Unit is required."),
   amount: z.number().positive("Amount must be greater than zero."),
-  paymentDate: z
-    .instanceof(Date, { message: "Invalid date" })
-    .refine((date) => !isNaN(date.getTime()), { message: "Invalid date" }),
   paymentMethod: z.enum([
     "bank_transfer",
     "check",
     "cash",
     "credit_card",
-    "other",
+    "other"
   ]),
   reference: z.string().optional(),
   notes: z
@@ -77,7 +67,6 @@ export function PaymentRecordForm({ buildingId }: { buildingId: number }) {
     defaultValues: {
       unitId: "",
       amount: 0.00,
-      paymentDate: new Date(),
       paymentMethod: "cash",
       reference: "",
       notes: "",
@@ -93,21 +82,22 @@ export function PaymentRecordForm({ buildingId }: { buildingId: number }) {
     }
   }, [selectedResident, form])
 
+  const date = new Date()
+
   async function onSubmit(values: RecordPaymentSchema) {
     try {
       const unitId = values.unitId;
       const selectedResident = residents?.find(r => r.unitId.toString() === unitId);
 
       if (selectedResident && !values.notes) {
-        const dateStr = format(values.paymentDate, "PPP");
         const residentName = `${selectedResident.firstName} ${selectedResident.lastName}`;
-        values.notes = `Payment of ${values.amount.toFixed(2)} MAD from ${residentName} via ${values.paymentMethod.replace('_', ' ')} on ${dateStr}${values.reference ? ` (Ref: ${values.reference})` : ''}.`;
+        values.notes = `Payment of ${values.amount.toFixed(2)} MAD from ${residentName} via ${values.paymentMethod.replace('_', ' ')} on ${format(date, "dd-MM-yyyy")
+          }${values.reference ? ` (Ref: ${values.reference})` : ''}.`;
       }
 
       const payload = {
         ...values,
         unitId: parseInt(values.unitId, 10),
-        paymentDate: values.paymentDate.toISOString(),
       }
 
       console.log("Submitting payload:", payload);
@@ -121,19 +111,18 @@ export function PaymentRecordForm({ buildingId }: { buildingId: number }) {
       form.reset({
         unitId: "",
         amount: 0.00,
-        paymentDate: new Date(),
         paymentMethod: "cash",
         reference: "",
         notes: "",
       });
 
       // You might want to show a success message here
-      // toast.success("Payment recorded successfully!");
+      toast.success("Payment recorded successfully!");
 
     } catch (error) {
       console.error("Error recording payment:", error);
       // You might want to show an error message here
-      // toast.error("Failed to record payment");
+      toast.error("Failed to record payment");
     }
   }
 
@@ -201,50 +190,7 @@ export function PaymentRecordForm({ buildingId }: { buildingId: number }) {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="paymentDate"
-            render={({ field }) => (
-              <FormItem className="flex-1 flex flex-col">
-                <FormLabel>Payment Date</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-full text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value ? (
-                          format(field.value, "PPP")
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                      }
-                      captionLayout="dropdown"
-                    />
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
 
-        <div className="flex gap-4">
           <FormField
             control={form.control}
             name="paymentMethod"
@@ -269,21 +215,21 @@ export function PaymentRecordForm({ buildingId }: { buildingId: number }) {
               </FormItem>
             )}
           />
-
-          <FormField
-            control={form.control}
-            name="reference"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel>Reference</FormLabel>
-                <FormControl>
-                  <Input placeholder="Optional reference" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </div>
+
+        <FormField
+          control={form.control}
+          name="reference"
+          render={({ field }) => (
+            <FormItem className="flex-1">
+              <FormLabel>Reference</FormLabel>
+              <FormControl>
+                <Input placeholder="Optional reference" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}
