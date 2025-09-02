@@ -21,7 +21,6 @@ final class ContributionController extends AbstractController
     {
         $stats = $this->unitRepository->getContributionOverviewByBuilding($buildingId);
 
-        // Convert array of arrays to array of DTOs
         $response = UnitContributionResponse::fromDataArray($stats);
 
         return $this->json(

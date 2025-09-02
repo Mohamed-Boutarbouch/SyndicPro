@@ -1,9 +1,10 @@
 "use client";
 
-import { ContributionDataTable, ContributionScheduleResponse } from "@/components/contribution-data-table";
+import { ContributionDataTable } from "@/components/contribution-data-table";
 import { RegisterPaymentDialog } from "@/components/register-payment-dialog";
 import { useSyndic } from "@/providers/syndic-provider";
 import { fetchContributionSchedule } from "@/services/fetch-contribution-schedule";
+import { ContributionScheduleResponse } from "@/types/contribution";
 import useSWR from "swr";
 
 export default function ContributionPage() {

@@ -9,7 +9,7 @@ export enum ContributionFrequency {
 export interface ContributionScheduleResponse {
   amountPerPayment: number;
   frequency: ContributionFrequency;
-  lastPayment: string | null;
+  paymentStatus: "paid" | "overdue";
   nextDueDate: string;
   ownerName: string;
   totalPaid: number;

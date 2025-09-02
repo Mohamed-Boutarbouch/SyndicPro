@@ -29,7 +29,6 @@ class UnitRepository extends ServiceEntityRepository
                 'cs.frequency',
                 'cs.amountPerPayment AS amountPerPayment',
                 'cs.nextDueDate AS nextDueDate',
-                'MAX(p.date) AS lastPayment',
                 'COALESCE(SUM(p.amount), 0) AS totalPaid'
             )
             ->join('u.user', 'usr')
@@ -61,16 +60,6 @@ class UnitRepository extends ServiceEntityRepository
                 $row['nextDueDate'] = (new \DateTime($row['nextDueDate']))->format('Y-m-d');
             } else {
                 $row['nextDueDate'] = null;
-            }
-
-            // Format lastPayment
-            if ($row['lastPayment'] instanceof \DateTimeInterface) {
-                $row['lastPayment'] = $row['lastPayment']->format('Y-m-d');
-            } elseif (is_string($row['lastPayment'])) {
-                // If it's already a string, parse and reformat
-                $row['lastPayment'] = (new \DateTime($row['lastPayment']))->format('Y-m-d');
-            } else {
-                $row['lastPayment'] = null;
             }
 
             // Convert totalPaid to float

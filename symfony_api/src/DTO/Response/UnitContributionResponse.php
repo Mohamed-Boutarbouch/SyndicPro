@@ -25,10 +25,10 @@ class UnitContributionResponse
     public ?string $nextDueDate;
 
     #[Groups(['contribution:overview'])]
-    public ?string $lastPayment;
+    public float $totalPaid;
 
     #[Groups(['contribution:overview'])]
-    public float $totalPaid;
+    public string $paymentStatus;
 
     /**
      * Creates a UnitContributionResponse from an array of unit contribution data.
@@ -42,8 +42,15 @@ class UnitContributionResponse
         $dto->frequency = (string) ($data['frequency'] ?? '');
         $dto->amountPerPayment = (float) ($data['amountPerPayment'] ?? 0.0);
         $dto->nextDueDate = $data['nextDueDate'] ?? null;
-        $dto->lastPayment = $data['lastPayment'] ?? null;
         $dto->totalPaid = (float) ($data['totalPaid'] ?? 0.0);
+
+        if ($dto->nextDueDate !== null) {
+            $now = new \DateTimeImmutable();
+            $nextDue = new \DateTimeImmutable($dto->nextDueDate);
+            $dto->paymentStatus = $now > $nextDue ? 'overdue' : 'paid';
+        } else {
+            $dto->paymentStatus = 'paid'; // fallback when no due date
+        }
 
         return $dto;
     }

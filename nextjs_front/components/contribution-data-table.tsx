@@ -13,7 +13,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
-import { ChevronDown, MoreHorizontal } from "lucide-react"
+import { Calendar, ChevronDown, MoreHorizontal } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -37,25 +37,8 @@ import {
 } from "@/components/ui/table"
 import { formatMoney } from "@/lib/formatMoney"
 import { Badge } from "./ui/badge"
-
-export enum ContributionFrequency {
-  MONTHLY = 'monthly',
-  BI_MONTHLY = 'bi_monthly',
-  QUARTERLY = 'quarterly',
-  FOUR_MONTHLY = 'four_monthly',
-  YEARLY = 'yearly'
-}
-
-export interface ContributionScheduleResponse {
-  amountPerPayment: number
-  frequency: ContributionFrequency
-  lastPayment: string | null
-  nextDueDate: string
-  ownerName: string
-  totalPaid: number
-  unitId: number
-  unitNumber: string
-}
+import { ContributionScheduleResponse } from "@/types/contribution"
+import { cn } from "@/lib/utils"
 
 // Example server data
 interface ContributionDataTableProps {
@@ -104,18 +87,43 @@ export const columns: ColumnDef<ContributionScheduleResponse>[] = [
     cell: ({ row }) => formatMoney(row.getValue<number>("amountPerPayment"))
   },
   {
+    accessorKey: "paymentStatus",
+    header: "Payment Status",
+    cell: ({ row }) => {
+      const status = row.getValue("paymentStatus") as string
+
+      return (
+        <Badge
+          variant="outline"
+          className={cn(
+            "capitalize",
+            status === "paid" && "bg-green-100 text-green-800 border-green-200",
+            status === "overdue" && "bg-red-100 text-red-800 border-red-200"
+          )}
+        >
+          {status}
+        </Badge>
+      )
+    },
+  },
+  {
     accessorKey: "totalPaid",
     header: "Total Paid",
     cell: ({ row }) => formatMoney(row.getValue<number>("totalPaid"))
   },
   {
-    accessorKey: "lastPayment",
-    header: "Last Payment",
-    cell: ({ row }) => row.getValue("lastPayment") ?? "-",
-  },
-  {
     accessorKey: "nextDueDate",
     header: "Next Due Date",
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center gap-2">
+          <Calendar className="h-4 w-4 text-muted-foreground" />
+          <span className="text-foreground">
+            {row.getValue("nextDueDate")}
+          </span>
+        </div>
+      )
+    },
   },
   {
     id: "actions",
