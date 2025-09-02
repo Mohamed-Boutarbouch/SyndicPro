@@ -38,7 +38,7 @@ export default function ContributionPage() {
   console.log(statsData)
   return (
     <div className="flex flex-col gap-4 p-8 md:gap-6 md:p-10">
-      {buildingId && <RegisterPaymentDialog buildingId={buildingId} />}
+      {buildingId && <RegisterPaymentDialog buildingId={buildingId} currentYear={currentYear} />}
 
       <OverallYearlyContributionCard currentContribution={statsData} />
 

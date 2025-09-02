@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/form"
 import { format } from "date-fns"
 import useSWRMutation from "swr/mutation"
-import useSWR from "swr"
+import useSWR, { mutate } from "swr"
 import { api } from "@/lib/axios"
 import { ResidentsFormResponse } from "@/types/building"
 import { useEffect } from "react"
@@ -51,7 +51,15 @@ export type RecordPaymentSchema = z.infer<typeof recordPaymentSchema>
 
 const fetcher = (url: string): Promise<ResidentsFormResponse[]> => api.get(url).then((res) => res.data)
 
-export function PaymentRecordForm({ buildingId }: { buildingId: number }) {
+export function PaymentRecordForm({
+  buildingId,
+  currentYear,
+  onSuccessAction,
+}: {
+  buildingId: number
+  currentYear: number
+  onSuccessAction?: () => void
+}) {
   const { data: residents, error: residentsError, isLoading } = useSWR<ResidentsFormResponse[]>(
     buildingId ? `/buildings/${buildingId}/residents` : null,
     fetcher
@@ -107,7 +115,9 @@ export function PaymentRecordForm({ buildingId }: { buildingId: number }) {
 
       console.log("Payment recorded successfully:", result);
 
-      // Reset form on success
+      // Refresh the schedule query
+      mutate(`/contributions/building/${buildingId}/schedule`);
+      mutate(`/contributions/building/${buildingId}/stats/year/${currentYear}`)
       form.reset({
         unitId: "",
         amount: 0.00,
@@ -116,9 +126,9 @@ export function PaymentRecordForm({ buildingId }: { buildingId: number }) {
         notes: "",
       });
 
-      // You might want to show a success message here
       toast.success("Payment recorded successfully!");
 
+      onSuccessAction?.()
     } catch (error) {
       console.error("Error recording payment:", error);
       // You might want to show an error message here

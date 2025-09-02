@@ -11,10 +11,13 @@ import {
 } from "@/components/ui/dialog"
 import { PaymentRecordForm } from "./forms/register-payment-form"
 import { Plus } from "lucide-react";
+import { useState } from "react";
 
-export function RegisterPaymentDialog({ buildingId }: { buildingId: number }) {
+export function RegisterPaymentDialog({ buildingId, currentYear }: { buildingId: number; currentYear: number }) {
+  const [open, setOpen] = useState(false)
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <div className="flex justify-end">
         <DialogTrigger asChild>
           <Button size="lg" className="text-black bg-primary hover:cursor-pointer w-40">
@@ -24,7 +27,7 @@ export function RegisterPaymentDialog({ buildingId }: { buildingId: number }) {
         </DialogTrigger>
       </div>
 
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>Record Contribution Payment</DialogTitle>
           <DialogDescription>
@@ -32,7 +35,11 @@ export function RegisterPaymentDialog({ buildingId }: { buildingId: number }) {
           </DialogDescription>
         </DialogHeader>
 
-        <PaymentRecordForm buildingId={buildingId} />
+        <PaymentRecordForm
+          buildingId={buildingId}
+          currentYear={currentYear}
+          onSuccessAction={() => setOpen(false)}
+        />
 
         <DialogFooter>
           <DialogClose asChild>
