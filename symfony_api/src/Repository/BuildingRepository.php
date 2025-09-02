@@ -20,17 +20,33 @@ class BuildingRepository extends ServiceEntityRepository
     public function getBuildingCardStats(int $buildingId): array
     {
         $em = $this->getEntityManager();
-
-        // --- Total and last month balance ---
-        $currentBalance = (float) $em->createQueryBuilder()
-            ->select('SUM(CASE WHEN t.type = \'income\' THEN t.amount ELSE -t.amount END)')
+        $totalIncome = (float) $em->createQueryBuilder()
+            ->select('SUM(t.amount)')
             ->from('App\Entity\Transaction', 't')
             ->where('t.building = :buildingId')
-            ->andWhere('t.status = :status')
+            ->andWhere('t.type = :incomeType')
+            ->andWhere('t.unit IS NOT NULL') // Only contributions from unit owners
+            ->andWhere('t.status IN (:statuses)')
             ->setParameter('buildingId', $buildingId)
-            ->setParameter('status', 'approved')
+            ->setParameter('incomeType', 'income')
+            ->setParameter('statuses', ['approved', 'paid'])
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult() ?: 0;
+
+        // Get total expenses
+        $totalExpenses = (float) $em->createQueryBuilder()
+            ->select('SUM(t.amount)')
+            ->from('App\Entity\Transaction', 't')
+            ->where('t.building = :buildingId')
+            ->andWhere('t.type = :expenseType')
+            ->andWhere('t.status IN (:statuses)')
+            ->setParameter('buildingId', $buildingId)
+            ->setParameter('expenseType', 'expense')
+            ->setParameter('statuses', ['approved', 'paid'])
+            ->getQuery()
+            ->getSingleScalarResult() ?: 0;
+
+        (float) $currentBalance = $totalIncome - $totalExpenses;
 
         $lastMonthBalance = (float) $em->createQueryBuilder()
             ->select('SUM(CASE WHEN t.type = \'income\' THEN t.amount ELSE -t.amount END)')
