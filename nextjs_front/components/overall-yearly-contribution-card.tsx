@@ -28,31 +28,25 @@ export function OverallYearlyContributionCard({ currentContribution }: Props) {
         </Badge>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="space-y-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Period */}
+        <div className="space-y-2 md:col-span-1 lg:col-span-1 md:justify-self-end lg:justify-self-auto">
           <p className="text-lg font-medium text-muted-foreground">Period</p>
-          <p className="text-xl font-semibold text-foreground">
-            {currentContribution.paymentYear}
-          </p>
-          <p className="text-lg text-muted-foreground">
-
+          <p className="text-xl font-semibold text-foreground">{currentContribution.paymentYear}</p>
+          <div className="text-lg text-muted-foreground">
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-muted-foreground" />
-              <span className="text-foreground">
-                {currentContribution.periodStartDate}
-              </span>
+              <span className="text-foreground">{currentContribution.periodStartDate}</span>
               <ArrowBigRight className="h-4 w-4 text-muted-foreground" />
               <Calendar className="h-4 w-4 text-muted-foreground" />
-              <span className="text-foreground">
-                {currentContribution.periodAnnualAmount}
-              </span>
+              <span className="text-foreground">{currentContribution.periodAnnualAmount}</span>
             </div>
-          </p>
+          </div>
         </div>
 
         <Separator className="my-2 block md:hidden" />
-
-        <div className="space-y-2">
+        {/* Total Budget */}
+        <div className="space-y-2 md:col-span-1 lg:col-span-1 md:justify-self-start lg:justify-self-auto">
           <p className="text-lg font-medium text-muted-foreground">Total Budget</p>
           <p className="text-xl font-semibold text-foreground">
             {formatMoney(currentContribution.totalAnnualAmount)}
@@ -64,10 +58,10 @@ export function OverallYearlyContributionCard({ currentContribution }: Props) {
 
         <Separator className="my-2 block md:hidden" />
 
-        <div className="space-y-2">
+        {/* Collection Progress */}
+        <div className="space-y-2 md:col-span-2 lg:col-span-1">
           <p className="text-lg font-medium text-muted-foreground">Collection Progress</p>
           <Progress value={collectionRate} className="h-3 rounded-full" />
-
           <div className="flex justify-between text-lg text-muted-foreground mt-2">
             <span>{collectionRate}%</span>
             <span>{formatMoney(currentContribution.totalPaidAmount)} collected</span>
