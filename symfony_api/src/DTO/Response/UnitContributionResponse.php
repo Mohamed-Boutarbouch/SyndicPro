@@ -6,6 +6,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 class UnitContributionResponse
 {
+    // Existing "overview" fields
     #[Groups(['contribution:overview'])]
     public int $unitId;
 
@@ -30,12 +31,40 @@ class UnitContributionResponse
     #[Groups(['contribution:overview'])]
     public string $paymentStatus;
 
+    #[Groups(['contribution:stats'])]
+    public int $buildingId;
+
+    #[Groups(['contribution:stats'])]
+    public string $buildingName;
+
+    #[Groups(['contribution:stats'])]
+    public int $paymentYear;
+
+    #[Groups(['contribution:stats'])]
+    public string $periodAnnualAmount;
+
+    #[Groups(['contribution:stats'])]
+    public string $periodStartDate;
+
+    #[Groups(['contribution:stats'])]
+    public int $regularContributionId;
+
+    #[Groups(['contribution:stats'])]
+    public float $totalAnnualAmount;
+
+    #[Groups(['contribution:stats'])]
+    public float $totalPaidAmount;
+
+    #[Groups(['contribution:stats'])]
+    public int $totalPayments;
+
     /**
-     * Creates a UnitContributionResponse from an array of unit contribution data.
+     * Creates a UnitContributionResponse from an array of contribution data.
      */
     public static function fromData(array $data): self
     {
         $dto = new self();
+
         $dto->unitId = (int) ($data['unitId'] ?? 0);
         $dto->unitNumber = (string) ($data['unitNumber'] ?? '');
         $dto->ownerName = (string) ($data['ownerName'] ?? '');
@@ -49,8 +78,18 @@ class UnitContributionResponse
             $nextDue = new \DateTimeImmutable($dto->nextDueDate);
             $dto->paymentStatus = $now > $nextDue ? 'overdue' : 'paid';
         } else {
-            $dto->paymentStatus = 'paid'; // fallback when no due date
+            $dto->paymentStatus = 'paid';
         }
+
+        $dto->buildingId = (int) ($data['buildingId'] ?? 0);
+        $dto->buildingName = (string) ($data['buildingName'] ?? '');
+        $dto->paymentYear = (int) ($data['paymentYear'] ?? 0);
+        $dto->periodAnnualAmount = (string) ($data['periodAnnualAmount'] ?? '');
+        $dto->periodStartDate = (string) ($data['periodStartDate'] ?? '');
+        $dto->regularContributionId = (int) ($data['regularContributionId'] ?? 0);
+        $dto->totalAnnualAmount = (float) ($data['totalAnnualAmount'] ?? 0.0);
+        $dto->totalPaidAmount = (float) ($data['totalPaidAmount'] ?? 0.0);
+        $dto->totalPayments = (int) ($data['totalPayments'] ?? 0);
 
         return $dto;
     }

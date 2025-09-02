@@ -245,4 +245,56 @@ class BuildingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getArrayResult();
     }
+
+    public function getBuildingContributionPaymentSummary(int $buildingId, int $year)
+    {
+        $startDate = new \DateTime($year . '-01-01 00:00:00');
+        $endDate = new \DateTime($year . '-12-31 23:59:59');
+
+        $result = $this->createQueryBuilder('b')
+            ->select([
+                'b.id as buildingId',
+                'b.name as buildingName',
+                (string)$year . ' as paymentYear',
+                'rc.id as regularContributionId',
+                'rc.totalAnnualAmount',
+                'rc.startDate as periodStartDate',
+                'rc.endDate as periodAnnualAmount',
+                'SUM(p.amount) as totalPaidAmount',
+                'COUNT(p.id) as totalPayments'
+            ])
+            ->join('b.units', 'u')
+            ->join('b.regularContributions', 'rc')
+            ->leftJoin('u.contributionSchedules', 'cs')
+            ->leftJoin('cs.payments', 'p')
+            ->where('b.id = :buildingId')
+            ->andWhere('p.date >= :startDate')
+            ->andWhere('p.date <= :endDate')
+            ->andWhere('p.id IS NOT NULL')
+            ->andWhere('rc.year = :year')
+            ->groupBy('b.id, b.name')
+            ->setParameter('buildingId', $buildingId)
+            ->setParameter('startDate', $startDate)
+            ->setParameter('endDate', $endDate)
+            ->setParameter('year', $year)
+            ->groupBy('b.id, b.name, rc.id, rc.totalAnnualAmount, rc.startDate, rc.endDate')
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if ($result) {
+            $result['totalPaidAmount'] = (float) $result['totalPaidAmount'];
+            $result['totalAnnualAmount'] = (float) $result['totalAnnualAmount'];
+            $result['totalPayments'] = (int) $result['totalPayments'];
+            $result['buildingId'] = (int) $result['buildingId'];
+
+            if ($result['periodStartDate'] instanceof \DateTimeInterface) {
+                $result['periodStartDate'] = $result['periodStartDate']->format('d-m-Y');
+            }
+            if ($result['periodAnnualAmount'] instanceof \DateTimeInterface) {
+                $result['periodAnnualAmount'] = $result['periodAnnualAmount']->format('d-m-Y');
+            }
+        }
+
+        return $result;
+    }
 }

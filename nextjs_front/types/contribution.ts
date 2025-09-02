@@ -16,3 +16,15 @@ export interface ContributionScheduleResponse {
   unitId: number;
   unitNumber: string;
 }
+
+export interface BuildingContributionStats {
+  buildingId: number;
+  buildingName: string;
+  paymentYear: number;
+  periodAnnualAmount: string;
+  periodStartDate: string;
+  regularContributionId: number;
+  totalAnnualAmount: number;
+  totalPaidAmount: number;
+  totalPayments: number;
+}
