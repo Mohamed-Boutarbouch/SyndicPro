@@ -5,13 +5,17 @@ namespace App\Entity;
 use App\Enum\LedgerEntryExpenseCategory;
 use App\Enum\LedgerEntryIncomeType;
 use App\Enum\LedgerEntryPaymentMethod;
+use App\Enum\LedgerEntryType;
 use App\Repository\LedgerEntryRepository;
+use App\Traits\TimestampableTrait;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LedgerEntryRepository::class)]
 class LedgerEntry
 {
+    use TimestampableTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -20,8 +24,8 @@ class LedgerEntry
     #[ORM\ManyToOne(inversedBy: 'ledgerEntries')]
     private ?Building $building = null;
 
-    #[ORM\Column(enumType: LedgerEntryIncomeType::class)]
-    private ?LedgerEntryIncomeType $type = null;
+    #[ORM\Column(enumType: LedgerEntryType::class)]
+    private ?LedgerEntryType $type = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 2)]
     private ?string $amount = null;
@@ -53,6 +57,9 @@ class LedgerEntry
     #[ORM\ManyToOne(inversedBy: 'ledgerEntries')]
     private ?AssessmentItem $assessmentItem = null;
 
+    #[ORM\ManyToOne(inversedBy: 'ledgerEntries')]
+    private ?User $recordedBy = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -70,12 +77,12 @@ class LedgerEntry
         return $this;
     }
 
-    public function getType(): ?LedgerEntryIncomeType
+    public function getType(): ?LedgerEntryType
     {
         return $this->type;
     }
 
-    public function setType(LedgerEntryIncomeType $type): static
+    public function setType(LedgerEntryType $type): static
     {
         $this->type = $type;
 
@@ -198,6 +205,18 @@ class LedgerEntry
     public function setAssessmentItem(?AssessmentItem $assessmentItem): static
     {
         $this->assessmentItem = $assessmentItem;
+
+        return $this;
+    }
+
+    public function getRecordedBy(): ?User
+    {
+        return $this->recordedBy;
+    }
+
+    public function setRecordedBy(?User $recordedBy): static
+    {
+        $this->recordedBy = $recordedBy;
 
         return $this;
     }

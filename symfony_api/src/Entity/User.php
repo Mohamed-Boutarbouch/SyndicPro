@@ -91,6 +91,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Payment::class, mappedBy: 'recorderBy')]
     private Collection $payments;
 
+    /**
+     * @var Collection<int, LedgerEntry>
+     */
+    #[ORM\OneToMany(targetEntity: LedgerEntry::class, mappedBy: 'recordedBy')]
+    private Collection $ledgerEntries;
+
     public function __construct()
     {
         $this->coOwners = new ArrayCollection();
@@ -99,6 +105,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->regularContributions = new ArrayCollection();
         $this->assessments = new ArrayCollection();
         $this->payments = new ArrayCollection();
+        $this->ledgerEntries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -415,6 +422,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($payment->getRecorderBy() === $this) {
                 $payment->setRecorderBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LedgerEntry>
+     */
+    public function getLedgerEntries(): Collection
+    {
+        return $this->ledgerEntries;
+    }
+
+    public function addLedgerEntry(LedgerEntry $ledgerEntry): static
+    {
+        if (!$this->ledgerEntries->contains($ledgerEntry)) {
+            $this->ledgerEntries->add($ledgerEntry);
+            $ledgerEntry->setRecordedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLedgerEntry(LedgerEntry $ledgerEntry): static
+    {
+        if ($this->ledgerEntries->removeElement($ledgerEntry)) {
+            // set the owning side to null (unless already changed)
+            if ($ledgerEntry->getRecordedBy() === $this) {
+                $ledgerEntry->setRecordedBy(null);
             }
         }
 
