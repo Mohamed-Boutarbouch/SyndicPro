@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\DTO\Response\UserResponse;
 use App\Service\UserService;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,7 +12,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/api/users', name: 'api_user_')]
-class SyndicController extends AbstractApiController
+class SyndicController extends AbstractController
 {
     public function __construct(
         SerializerInterface $serializer,
@@ -30,10 +31,10 @@ class SyndicController extends AbstractApiController
             throw new NotFoundHttpException('No syndic found for this building');
         }
 
-        return $this->jsonResponse(
+        return $this->json(
             UserResponse::fromEntity($syndic),
             status: 200,
-            groups: ['user:syndic']
+            context: ['groups' => ['user:syndic']]
         );
     }
 

@@ -23,13 +23,10 @@ final class ContributionController extends AbstractController
     {
         $stats = $this->buildingRepository->getBuildingContributionPaymentSummary($buildingId, $year);
 
-        $response = UnitContributionResponse::fromData($stats);
-
         return $this->json(
-            $response,
-            200,
-            [],
-            ['groups' => ['contribution:stats']]
+            UnitContributionResponse::fromData($stats),
+            status: 200,
+            context: ['groups' => ['contribution:stats']]
         );
     }
 
@@ -38,13 +35,10 @@ final class ContributionController extends AbstractController
     {
         $stats = $this->unitRepository->getContributionOverviewByBuilding($buildingId);
 
-        $response = UnitContributionResponse::fromDataArray($stats);
-
         return $this->json(
-            $response,
-            200,
-            [],
-            ['groups' => ['contribution:overview']]
+            UnitContributionResponse::fromDataArray($stats),
+            status: 200,
+            context: ['groups' => ['contribution:overview']]
         );
     }
 }

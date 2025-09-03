@@ -23,9 +23,8 @@ final class DashboardController extends AbstractController
 
         return $this->json(
             DashboardResponse::fromData($stats),
-            200,
-            [],
-            ['groups' => ['dashboard:card']]
+            status: 200,
+            context: ['groups' => ['dashboard:card']]
         );
     }
 
@@ -36,9 +35,8 @@ final class DashboardController extends AbstractController
 
         return $this->json(
             DashboardResponse::fromData($stats),
-            200,
-            [],
-            ['groups' => ['dashboard:income-expenses']]
+            status: 200,
+            context: ['groups' => ['dashboard:income-expenses']]
         );
     }
 
@@ -47,13 +45,10 @@ final class DashboardController extends AbstractController
     {
         $stats = $this->dashboardService->getExpensesDistribution($buildingId);
 
-        // echo json_encode($stats);
-        // die();
         return $this->json(
             DashboardResponse::fromData($stats),
-            200,
-            [],
-            ['groups' => ['dashboard:expenses-distribution']]
+            status: 200,
+            context: ['groups' => ['dashboard:expenses-distribution']]
         );
     }
 }

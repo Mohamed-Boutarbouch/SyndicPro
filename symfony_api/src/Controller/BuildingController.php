@@ -30,13 +30,11 @@ final class BuildingController extends AbstractController
     public function residents(int $buildingId): Response
     {
         $stats = $this->buildingRepository->getResidentsByBuilding($buildingId);
-        $response = ResidentsResponse::fromDataArray($stats);
 
         return $this->json(
-            $response,
-            200,
-            [],
-            ['groups' => ['form']]
+            ResidentsResponse::fromDataArray($stats),
+            status: 200,
+            context: ['groups' => ['form']]
         );
     }
 
