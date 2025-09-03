@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\DTO\Request\RecordPaymentRequest;
 use App\DTO\Response\ResidentsResponse;
+use App\Enum\LedgerEntryPaymentMethod;
 use App\Repository\BuildingRepository;
 use App\Service\ContributionPaymentService;
 use Psr\Log\LoggerInterface;
@@ -92,7 +93,6 @@ final class BuildingController extends AbstractController
                 ], Response::HTTP_BAD_REQUEST);
             }
 
-            // Validate the request
             $errors = $this->validator->validate($paymentRequest);
             if (count($errors) > 0) {
                 $errorMessages = [];
@@ -109,7 +109,6 @@ final class BuildingController extends AbstractController
                 ], Response::HTTP_BAD_REQUEST);
             }
 
-            // Process the payment
             $this->logger->info('Processing payment', ['buildingId' => $buildingId]);
             $paymentRecord = $this->contributionPaymentService->recordPayment($buildingId, $paymentRequest);
 
@@ -143,7 +142,6 @@ final class BuildingController extends AbstractController
 
     private function createPaymentRequestFromData(array $data): RecordPaymentRequest
     {
-        // Parse the payment date
         $paymentDate = null;
         if (isset($data['paymentDate'])) {
             try {
@@ -153,11 +151,10 @@ final class BuildingController extends AbstractController
             }
         }
 
-        // Parse the payment method
         $paymentMethod = null;
         if (isset($data['paymentMethod'])) {
             try {
-                $paymentMethod = \App\Enum\PaymentMethod::from($data['paymentMethod']);
+                $paymentMethod = LedgerEntryPaymentMethod::from($data['paymentMethod']);
             } catch (\ValueError $e) {
                 throw new \InvalidArgumentException('Invalid payment method: ' . $data['paymentMethod']);
             }

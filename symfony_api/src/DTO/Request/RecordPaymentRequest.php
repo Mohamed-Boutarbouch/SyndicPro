@@ -2,6 +2,7 @@
 
 namespace App\DTO\Request;
 
+use App\Enum\LedgerEntryPaymentMethod;
 use App\Enum\PaymentMethod;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -22,7 +23,7 @@ class RecordPaymentRequest
     public \DateTimeInterface $paymentDate;
 
     #[Assert\NotNull]
-    public PaymentMethod $paymentMethod;
+    public LedgerEntryPaymentMethod $paymentMethod;
 
     #[Assert\Type('string')]
     public ?string $reference = null;
@@ -34,14 +35,14 @@ class RecordPaymentRequest
         int $unitId = 0,
         float $amount = 0.0,
         ?\DateTimeInterface $paymentDate = null,
-        ?PaymentMethod $paymentMethod = null,
+        ?LedgerEntryPaymentMethod $paymentMethod = null,
         ?string $reference = null,
         ?string $notes = null
     ) {
         $this->unitId = $unitId;
         $this->amount = $amount;
         $this->paymentDate = $paymentDate ?? new \DateTimeImmutable();
-        $this->paymentMethod = $paymentMethod ?? PaymentMethod::CASH;
+        $this->paymentMethod = $paymentMethod ?? LedgerEntryPaymentMethod::CASH;
         $this->reference = $reference;
         $this->notes = $notes;
     }

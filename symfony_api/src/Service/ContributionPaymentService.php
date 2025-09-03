@@ -3,10 +3,9 @@
 namespace App\Service;
 
 use App\DTO\Request\RecordPaymentRequest;
-use App\Entity\Payment;
-use App\Entity\Transaction;
-use App\Enum\TransactionStatus;
-use App\Enum\TransactionType;
+use App\Entity\LedgerEntry;
+use App\Enum\LedgerEntryIncomeType;
+use App\Enum\LedgerEntryType;
 use App\Repository\BuildingRepository;
 use App\Repository\UnitRepository;
 use App\Repository\UserRepository;
@@ -28,8 +27,7 @@ class ContributionPaymentService
     ) {
     }
 
-    // $this->entityManager->refresh($user);
-    public function recordPayment(int $buildingId, RecordPaymentRequest $request): Payment
+    public function recordPayment(int $buildingId, RecordPaymentRequest $request): LedgerEntry
     {
         try {
             $this->logger->info('Starting payment recording process', [
@@ -55,34 +53,23 @@ class ContributionPaymentService
                 'unitNumber' => $unit->getNumber()
             ]);
 
+            $building = $this->buildingRepository->find($buildingId);
 
             $regularContributionId = 1; // hardcoded for now
             $schedule = $this->contributionScheduleRepository
                 ->findByRegularContributionAndUnit($regularContributionId, $unit->getId());
 
-            $payment = new Payment();
-            $payment->setContributionSchedule($schedule);
-            $payment->setAmount($request->amount);
-            $payment->setDate($request->paymentDate);
-            $payment->setMethod($request->paymentMethod);
-            $payment->setReferenceNumber($request->reference);
-            $payment->setNotes($request->notes);
-            $payment->setRecorderBy($user);
-
-            $building = $this->buildingRepository->find($buildingId);
-
-            $transaction = new Transaction();
-            $transaction->setBuilding($building);
-            $transaction->setType(TransactionType::INCOME);
-            $transaction->setAmount($request->amount);
-            $transaction->setDate(new \DateTimeImmutable());
-            $transaction->setDescription('Contribution payment for unit ' . $unit->getNumber());
-            $transaction->setUnit($unit);
-            $transaction->setReferenceNumber($request->reference);
-            $transaction->setPaymentMethod($request->paymentMethod);
-            $transaction->setStatus(TransactionStatus::PAID);
-            $transaction->setApprovedBy($user);
-            $transaction->setApprovedAt(new \DateTimeImmutable());
+            $ledgerEntry = new LedgerEntry();
+            $ledgerEntry->setBuilding($building);
+            $ledgerEntry->setType(LedgerEntryType::INCOME);
+            $ledgerEntry->setAmount($request->amount);
+            $ledgerEntry->setDescription('Contribution payment for unit ' . $unit->getNumber());
+            $ledgerEntry->setIncomeType(LedgerEntryIncomeType::REGULAR_CONTRIBUTION);
+            $ledgerEntry->setUnit($unit);
+            $ledgerEntry->setReferenceNumber($request->reference);
+            $ledgerEntry->setPaymentMethod($request->paymentMethod);
+            $ledgerEntry->setContributionSchedule($schedule);
+            $ledgerEntry->setRecordedBy($user);
 
             if (!$schedule) {
                 throw new \RuntimeException('Contribution schedule not found for this unit.');
@@ -112,19 +99,16 @@ class ContributionPaymentService
                     throw new \RuntimeException('Unknown contribution frequency: ' . $frequency);
             }
 
-            // Update the schedule
             $schedule->setNextDueDate($nextDueDate);
-            $this->entityManager->persist($schedule);
 
-            $this->entityManager->persist($payment);
-            $this->entityManager->persist($transaction);
+            $this->entityManager->persist($ledgerEntry);
             $this->entityManager->flush();
 
             $this->logger->info('Payment recorded successfully', [
-                'paymentId' => $payment->getId()
+                'ledgerEntryId' => $ledgerEntry->getId()
             ]);
 
-            return $payment;
+            return $ledgerEntry;
         } catch (\InvalidArgumentException $e) {
             throw $e;
         } catch (\Exception $e) {
