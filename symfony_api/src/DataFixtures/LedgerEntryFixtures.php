@@ -13,9 +13,10 @@ use App\Enum\LedgerEntryIncomeType;
 use App\Enum\LedgerEntryPaymentMethod;
 use App\Enum\LedgerEntryType;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class LedgerEntryFixtures extends Fixture
+class LedgerEntryFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
@@ -30,19 +31,29 @@ class LedgerEntryFixtures extends Fixture
             $ledgerEntry->setType(LedgerEntryType::from($item['type']));
             $ledgerEntry->setAmount($item['amount']);
             $ledgerEntry->setDescription($item['description']);
-            $ledgerEntry->setIncomeType(LedgerEntryIncomeType::from($item['income_type']));
 
-            if (!empty($item['unit_id'])) {
-                $assessmentItem = $this->getReference(
-                    'assessment_item_' . $item['unit_id'],
-                    Unit::class
-                );
-                $ledgerEntry->setAssessmentItem($assessmentItem);
+            if (!empty($item['income_type'])) {
+                $ledgerEntry->setIncomeType(LedgerEntryIncomeType::from($item['income_type']));
             } else {
-                $ledgerEntry->setAssessmentItem(null);
+                $ledgerEntry->setIncomeType(null);
             }
 
-            $ledgerEntry->setExpenseCategory(LedgerEntryExpenseCategory::from($item['expense_category']));
+            if (!empty($item['unit_id'])) {
+                $unit = $this->getReference(
+                    'unit_' . $item['unit_id'],
+                    Unit::class
+                );
+                $ledgerEntry->setUnit($unit);
+            } else {
+                $ledgerEntry->setUnit(null);
+            }
+
+            if (!empty($item['expense_category'])) {
+                $ledgerEntry->setExpenseCategory(LedgerEntryExpenseCategory::from($item['expense_category']));
+            } else {
+                $ledgerEntry->setExpenseCategory(null);
+            }
+
             $ledgerEntry->setVendor($item['vendor']);
             $ledgerEntry->setReferenceNumber($item['reference_number']);
             $ledgerEntry->setPaymentMethod(LedgerEntryPaymentMethod::from($item['payment_method']));

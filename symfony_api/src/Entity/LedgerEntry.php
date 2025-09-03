@@ -33,13 +33,13 @@ class LedgerEntry
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(enumType: LedgerEntryIncomeType::class)]
+    #[ORM\Column(enumType: LedgerEntryIncomeType::class, nullable: true)]
     private ?LedgerEntryIncomeType $incomeType = null;
 
     #[ORM\ManyToOne(inversedBy: 'ledgerEntries')]
     private ?Unit $unit = null;
 
-    #[ORM\Column(enumType: LedgerEntryExpenseCategory::class)]
+    #[ORM\Column(enumType: LedgerEntryExpenseCategory::class, nullable: true)]
     private ?LedgerEntryExpenseCategory $expenseCategory = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -118,7 +118,7 @@ class LedgerEntry
         return $this->incomeType;
     }
 
-    public function setIncomeType(LedgerEntryIncomeType $incomeType): static
+    public function setIncomeType(?LedgerEntryIncomeType $incomeType): static
     {
         $this->incomeType = $incomeType;
 
@@ -142,7 +142,7 @@ class LedgerEntry
         return $this->expenseCategory;
     }
 
-    public function setExpenseCategory(LedgerEntryExpenseCategory $expenseCategory): static
+    public function setExpenseCategory(?LedgerEntryExpenseCategory $expenseCategory): static
     {
         $this->expenseCategory = $expenseCategory;
 
