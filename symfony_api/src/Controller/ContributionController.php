@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\DTO\Response\UnitContributionResponse;
 use App\Repository\BuildingRepository;
+use App\Repository\RegularContributionRepository;
 use App\Repository\UnitRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,14 +15,14 @@ final class ContributionController extends AbstractController
 {
     public function __construct(
         private UnitRepository $unitRepository,
-        private BuildingRepository $buildingRepository,
+        private RegularContributionRepository $regularContributionRepository,
     ) {
     }
 
     #[Route('/building/{buildingId}/stats/year/{year}', methods: ['GET'], name: 'stats')]
     public function stats(int $buildingId, int $year): Response
     {
-        $stats = $this->buildingRepository->getBuildingContributionPaymentSummary($buildingId, $year);
+        $stats = $this->regularContributionRepository->findRegularContributionReport($buildingId, $year);
 
         return $this->json(
             UnitContributionResponse::fromData($stats),

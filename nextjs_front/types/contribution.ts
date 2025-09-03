@@ -7,22 +7,23 @@ export enum ContributionFrequency {
 }
 
 export interface ContributionScheduleResponse {
-  amountPerPayment: number;
-  frequency: ContributionFrequency;
-  paymentStatus: "paid" | "overdue";
-  nextDueDate: string;
-  ownerName: string;
-  totalPaid: number;
   unitId: number;
   unitNumber: string;
+  ownerFullName: string;
+  frequency: ContributionFrequency;
+  amountPerPayment: number;
+  nextDueDate: string | null;
+  totalPaid: number;
+  paymentStatus: "paid" | "overdue";
 }
 
 export interface BuildingContributionStats {
   buildingId: number;
   buildingName: string;
   paymentYear: number;
-  periodAnnualAmount: string;
+  amountPerUnit: number;
   periodStartDate: string;
+  periodEndDate: string;
   regularContributionId: number;
   totalAnnualAmount: number;
   totalPaidAmount: number;

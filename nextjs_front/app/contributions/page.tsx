@@ -5,7 +5,7 @@ import { OverallYearlyContributionCard } from "@/components/overall-yearly-contr
 import { RegisterPaymentDialog } from "@/components/register-payment-dialog";
 import { useSyndic } from "@/providers/syndic-provider";
 import { fetchContributionSchedule } from "@/services/fetch-contribution-schedule";
-import { fetchContributionStats } from "@/services/fetch-contribution-stats"; // <-- new import
+import { fetchContributionStats } from "@/services/fetch-contribution-stats";
 import { ContributionScheduleResponse, BuildingContributionStats } from "@/types/contribution";
 import useSWR from "swr";
 
@@ -35,7 +35,6 @@ export default function ContributionPage() {
   if (scheduleLoading || statsLoading) return <div>Loading...</div>;
   if (scheduleError || statsError) return <div>Error loading data</div>;
 
-  console.log(statsData)
   return (
     <div className="flex flex-col gap-4 p-8 md:gap-6 md:p-10">
       {buildingId && <RegisterPaymentDialog buildingId={buildingId} currentYear={currentYear} />}

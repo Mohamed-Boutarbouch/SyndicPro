@@ -47,10 +47,13 @@ class UnitContributionResponse
     public int $paymentYear;
 
     #[Groups(['contribution:stats'])]
-    public string $periodAnnualAmount;
+    public string $periodStartDate;
 
     #[Groups(['contribution:stats'])]
-    public string $periodStartDate;
+    public string $periodEndDate;
+
+    #[Groups(['contribution:stats'])]
+    public float $amountPerUnit;
 
     #[Groups(['contribution:stats'])]
     public int $regularContributionId;
@@ -80,6 +83,7 @@ class UnitContributionResponse
         $dto->amountPerPayment = (float) ($data['amountPerPayment'] ?? 0.0);
         $dto->nextDueDate = $data['nextDueDate'] ?? null;
         $dto->totalPaid = (float) ($data['totalPaid'] ?? 0.0);
+        $dto->amountPerUnit = (float) ($data['amountPerUnit'] ?? 0.0);
 
         if ($dto->nextDueDate !== null) {
             $now = new \DateTimeImmutable();
@@ -92,13 +96,37 @@ class UnitContributionResponse
         $dto->buildingId = (int) ($data['buildingId'] ?? 0);
         $dto->buildingName = (string) ($data['buildingName'] ?? '');
         $dto->paymentYear = (int) ($data['paymentYear'] ?? 0);
-        $dto->periodAnnualAmount = (string) ($data['periodAnnualAmount'] ?? '');
-        $dto->periodStartDate = (string) ($data['periodStartDate'] ?? '');
         $dto->regularContributionId = (int) ($data['regularContributionId'] ?? 0);
         $dto->totalAnnualAmount = (float) ($data['totalAnnualAmount'] ?? 0.0);
         $dto->totalPaidAmount = (float) ($data['totalPaidAmount'] ?? 0.0);
         $dto->totalPayments = (int) ($data['totalPayments'] ?? 0);
 
+        // Format the date properly
+        if (isset($data['periodStartDate'])) {
+            if ($data['periodStartDate'] instanceof \DateTimeInterface) {
+                $dto->periodStartDate = $data['periodStartDate']->format('d-m-Y');
+            } elseif (is_string($data['periodStartDate'])) {
+                $date = new \DateTime($data['periodStartDate']);
+                $dto->periodStartDate = $date->format('d-m-Y');
+            } else {
+                $dto->periodStartDate = (string) $data['periodStartDate'];
+            }
+        } else {
+            $dto->periodStartDate = '';
+        }
+
+        if (isset($data['periodEndDate'])) {
+            if ($data['periodEndDate'] instanceof \DateTimeInterface) {
+                $dto->periodEndDate = $data['periodEndDate']->format('d-m-Y');
+            } elseif (is_string($data['periodEndDate'])) {
+                $date = new \DateTime($data['periodEndDate']);
+                $dto->periodEndDate = $date->format('d-m-Y');
+            } else {
+                $dto->periodEndDate = (string) $data['periodEndDate'];
+            }
+        } else {
+            $dto->periodEndDate = '';
+        }
         return $dto;
     }
 

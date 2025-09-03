@@ -39,7 +39,7 @@ export function OverallYearlyContributionCard({ currentContribution }: Props) {
               <span className="text-foreground">{currentContribution.periodStartDate}</span>
               <ArrowBigRight className="h-4 w-4 text-muted-foreground" />
               <Calendar className="h-4 w-4 text-muted-foreground" />
-              <span className="text-foreground">{currentContribution.periodAnnualAmount}</span>
+              <span className="text-foreground">{currentContribution.periodEndDate}</span>
             </div>
           </div>
         </div>
@@ -52,7 +52,7 @@ export function OverallYearlyContributionCard({ currentContribution }: Props) {
             {formatMoney(currentContribution.totalAnnualAmount)}
           </p>
           <p className="text-lg text-muted-foreground">
-            {formatMoney(currentContribution.totalAnnualAmount / 10)} per unit
+            {formatMoney(currentContribution.amountPerUnit)} per unit
           </p>
         </div>
 
