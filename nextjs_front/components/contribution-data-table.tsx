@@ -1,5 +1,6 @@
 "use client"
 
+import { format, parseISO } from "date-fns"
 import * as React from "react"
 import {
   ColumnDef,
@@ -120,11 +121,14 @@ export const columns: ColumnDef<ContributionScheduleResponse>[] = [
     accessorKey: "nextDueDate",
     header: "Next Due Date",
     cell: ({ row }) => {
+      const value = row.getValue("nextDueDate") as string | null
+      const formattedDate = value ? format(parseISO(value), "dd-MM-yyyy") : "—"
+
       return (
         <div className="flex items-center gap-2">
           <Calendar className="h-4 w-4 text-muted-foreground" />
           <span className="text-foreground">
-            {row.getValue("nextDueDate")}
+            {formattedDate}
           </span>
         </div>
       )
