@@ -29,7 +29,7 @@
         "payment_method": "check",
         "contribution_schedule_id": null,
         "assessment_item_id": 2,
-        "recorded_by": 2
+        "recorded_by": 1
     },
     {
         "id": 3,
@@ -49,7 +49,7 @@
     },
     {
         "id": 4,
-        "building_id": 2,
+        "building_id": 1,
         "type": "expense",
         "amount": 600.00,
         "description": "Syndic monthly management fees",
@@ -61,11 +61,11 @@
         "payment_method": "bank_transfer",
         "contribution_schedule_id": null,
         "assessment_item_id": null,
-        "recorded_by": 3
+        "recorded_by": 1
     },
     {
         "id": 5,
-        "building_id": 2,
+        "building_id": 1,
         "type": "expense",
         "amount": 250.00,
         "description": "Office supplies for syndic",
@@ -77,6 +77,6 @@
         "payment_method": "credit_card",
         "contribution_schedule_id": null,
         "assessment_item_id": null,
-        "recorded_by": 3
+        "recorded_by": 1
     }
 ]
