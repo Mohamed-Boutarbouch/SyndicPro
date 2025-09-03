@@ -81,19 +81,19 @@ class ContributionPaymentService
 
             switch ($frequency) {
                 case 'monthly':
-                    $nextDueDate = $nextDueDate->modify('+1 month');
+                    $nextDueDate = (clone $nextDueDate)->modify('first day of next month')->modify('-1 day');
                     break;
                 case 'bi_monthly':
-                    $nextDueDate = $nextDueDate->modify('+2 months');
+                    $nextDueDate = (clone $nextDueDate)->modify('first day of +2 months')->modify('-1 day');
                     break;
                 case 'quarterly':
-                    $nextDueDate = $nextDueDate->modify('+3 months');
+                    $nextDueDate = (clone $nextDueDate)->modify('first day of +3 months')->modify('-1 day');
                     break;
                 case 'four_monthly':
-                    $nextDueDate = $nextDueDate->modify('+4 months');
+                    $nextDueDate = (clone $nextDueDate)->modify('first day of +4 months')->modify('-1 day');
                     break;
                 case 'yearly':
-                    $nextDueDate = $nextDueDate->modify('+1 year');
+                    $nextDueDate = (clone $nextDueDate)->modify('first day of next year')->modify('-1 day');
                     break;
                 default:
                     throw new \RuntimeException('Unknown contribution frequency: ' . $frequency);
