@@ -22,18 +22,19 @@ class UnitRepository extends ServiceEntityRepository
     public function getContributionOverviewByBuilding(int $buildingId): array
     {
         $qb = $this->createQueryBuilder('u')
-            ->select(
+            ->select([
                 'u.id AS unitId',
                 'u.number AS unitNumber',
-                "CONCAT(usr.firstName, ' ', usr.lastName) AS ownerName",
+                'usr.firstName AS ownerFirstName',
+                'usr.lastName AS ownerLastName',
                 'cs.frequency',
                 'cs.amountPerPayment AS amountPerPayment',
                 'cs.nextDueDate AS nextDueDate',
-                'COALESCE(SUM(p.amount), 0) AS totalPaid'
-            )
+                'COALESCE(SUM(le.amount), 0) AS totalPaid'
+            ])
             ->join('u.user', 'usr')
             ->join('App\Entity\ContributionSchedule', 'cs', 'WITH', 'cs.unit = u AND cs.isActive = true')
-            ->leftJoin('App\Entity\Payment', 'p', 'WITH', 'p.contributionSchedule = cs')
+            ->leftJoin('App\Entity\LedgerEntry', 'le', 'WITH', 'le.contributionSchedule = cs')
             ->where('u.building = :buildingId')
             ->setParameter('buildingId', $buildingId)
             ->groupBy('u.id, cs.id, u.number, usr.firstName, usr.lastName, cs.frequency, cs.amountPerPayment, cs.nextDueDate');

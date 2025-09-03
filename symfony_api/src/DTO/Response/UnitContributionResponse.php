@@ -14,7 +14,13 @@ class UnitContributionResponse
     public string $unitNumber;
 
     #[Groups(['contribution:overview'])]
-    public string $ownerName;
+    public string $ownerFirstName;
+
+    #[Groups(['contribution:overview'])]
+    public string $ownerLastName;
+
+    #[Groups(['contribution:overview'])]
+    public string $ownerFullName;
 
     #[Groups(['contribution:overview'])]
     public string $frequency;
@@ -67,7 +73,9 @@ class UnitContributionResponse
 
         $dto->unitId = (int) ($data['unitId'] ?? 0);
         $dto->unitNumber = (string) ($data['unitNumber'] ?? '');
-        $dto->ownerName = (string) ($data['ownerName'] ?? '');
+
+        $dto->ownerFullName = trim(($data['ownerLastName'] ?? '') . ' ' . ($data['ownerFirstName'] ?? ''));
+
         $dto->frequency = (string) ($data['frequency'] ?? '');
         $dto->amountPerPayment = (float) ($data['amountPerPayment'] ?? 0.0);
         $dto->nextDueDate = $data['nextDueDate'] ?? null;
