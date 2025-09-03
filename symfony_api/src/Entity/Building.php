@@ -58,6 +58,12 @@ class Building
     #[ORM\OneToMany(targetEntity: Assessment::class, mappedBy: 'building')]
     private Collection $assessments;
 
+    /**
+     * @var Collection<int, LedgerEntry>
+     */
+    #[ORM\OneToMany(targetEntity: LedgerEntry::class, mappedBy: 'building')]
+    private Collection $ledgerEntries;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -65,6 +71,7 @@ class Building
         $this->transactions = new ArrayCollection();
         $this->regularContributions = new ArrayCollection();
         $this->assessments = new ArrayCollection();
+        $this->ledgerEntries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -252,6 +259,36 @@ class Building
             // set the owning side to null (unless already changed)
             if ($assessment->getBuilding() === $this) {
                 $assessment->setBuilding(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LedgerEntry>
+     */
+    public function getLedgerEntries(): Collection
+    {
+        return $this->ledgerEntries;
+    }
+
+    public function addLedgerEntry(LedgerEntry $ledgerEntry): static
+    {
+        if (!$this->ledgerEntries->contains($ledgerEntry)) {
+            $this->ledgerEntries->add($ledgerEntry);
+            $ledgerEntry->setBuilding($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLedgerEntry(LedgerEntry $ledgerEntry): static
+    {
+        if ($this->ledgerEntries->removeElement($ledgerEntry)) {
+            // set the owning side to null (unless already changed)
+            if ($ledgerEntry->getBuilding() === $this) {
+                $ledgerEntry->setBuilding(null);
             }
         }
 

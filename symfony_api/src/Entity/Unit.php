@@ -59,11 +59,18 @@ class Unit
     #[ORM\OneToMany(targetEntity: AssessmentItem::class, mappedBy: 'unit')]
     private Collection $assessmentItems;
 
+    /**
+     * @var Collection<int, LedgerEntry>
+     */
+    #[ORM\OneToMany(targetEntity: LedgerEntry::class, mappedBy: 'unit')]
+    private Collection $ledgerEntries;
+
     public function __construct()
     {
         $this->transactions = new ArrayCollection();
         $this->contributionSchedules = new ArrayCollection();
         $this->assessmentItems = new ArrayCollection();
+        $this->ledgerEntries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -239,6 +246,36 @@ class Unit
             // set the owning side to null (unless already changed)
             if ($assessmentItem->getUnit() === $this) {
                 $assessmentItem->setUnit(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LedgerEntry>
+     */
+    public function getLedgerEntries(): Collection
+    {
+        return $this->ledgerEntries;
+    }
+
+    public function addLedgerEntry(LedgerEntry $ledgerEntry): static
+    {
+        if (!$this->ledgerEntries->contains($ledgerEntry)) {
+            $this->ledgerEntries->add($ledgerEntry);
+            $ledgerEntry->setUnit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLedgerEntry(LedgerEntry $ledgerEntry): static
+    {
+        if ($this->ledgerEntries->removeElement($ledgerEntry)) {
+            // set the owning side to null (unless already changed)
+            if ($ledgerEntry->getUnit() === $this) {
+                $ledgerEntry->setUnit(null);
             }
         }
 

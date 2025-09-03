@@ -38,9 +38,16 @@ class AssessmentItem
     #[ORM\OneToMany(targetEntity: Payment::class, mappedBy: 'assessmentItem')]
     private Collection $payments;
 
+    /**
+     * @var Collection<int, LedgerEntry>
+     */
+    #[ORM\OneToMany(targetEntity: LedgerEntry::class, mappedBy: 'assessmentItem')]
+    private Collection $ledgerEntries;
+
     public function __construct()
     {
         $this->payments = new ArrayCollection();
+        $this->ledgerEntries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -120,6 +127,36 @@ class AssessmentItem
             // set the owning side to null (unless already changed)
             if ($payment->getAssessmentItem() === $this) {
                 $payment->setAssessmentItem(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LedgerEntry>
+     */
+    public function getLedgerEntries(): Collection
+    {
+        return $this->ledgerEntries;
+    }
+
+    public function addLedgerEntry(LedgerEntry $ledgerEntry): static
+    {
+        if (!$this->ledgerEntries->contains($ledgerEntry)) {
+            $this->ledgerEntries->add($ledgerEntry);
+            $ledgerEntry->setAssessmentItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLedgerEntry(LedgerEntry $ledgerEntry): static
+    {
+        if ($this->ledgerEntries->removeElement($ledgerEntry)) {
+            // set the owning side to null (unless already changed)
+            if ($ledgerEntry->getAssessmentItem() === $this) {
+                $ledgerEntry->setAssessmentItem(null);
             }
         }
 

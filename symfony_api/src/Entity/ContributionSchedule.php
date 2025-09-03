@@ -47,9 +47,19 @@ class ContributionSchedule
     #[ORM\OneToMany(targetEntity: Payment::class, mappedBy: 'contributionSchedule')]
     private Collection $payments;
 
+    #[ORM\ManyToOne(inversedBy: 'contributionSchedule')]
+    private ?LedgerEntry $ledgerEntry = null;
+
+    /**
+     * @var Collection<int, LedgerEntry>
+     */
+    #[ORM\OneToMany(targetEntity: LedgerEntry::class, mappedBy: 'contributionSchedule')]
+    private Collection $ledgerEntries;
+
     public function __construct()
     {
         $this->payments = new ArrayCollection();
+        $this->ledgerEntries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -165,6 +175,48 @@ class ContributionSchedule
             // set the owning side to null (unless already changed)
             if ($payment->getContributionSchedule() === $this) {
                 $payment->setContributionSchedule(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getLedgerEntry(): ?LedgerEntry
+    {
+        return $this->ledgerEntry;
+    }
+
+    public function setLedgerEntry(?LedgerEntry $ledgerEntry): static
+    {
+        $this->ledgerEntry = $ledgerEntry;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LedgerEntry>
+     */
+    public function getLedgerEntries(): Collection
+    {
+        return $this->ledgerEntries;
+    }
+
+    public function addLedgerEntry(LedgerEntry $ledgerEntry): static
+    {
+        if (!$this->ledgerEntries->contains($ledgerEntry)) {
+            $this->ledgerEntries->add($ledgerEntry);
+            $ledgerEntry->setContributionSchedule($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLedgerEntry(LedgerEntry $ledgerEntry): static
+    {
+        if ($this->ledgerEntries->removeElement($ledgerEntry)) {
+            // set the owning side to null (unless already changed)
+            if ($ledgerEntry->getContributionSchedule() === $this) {
+                $ledgerEntry->setContributionSchedule(null);
             }
         }
 
