@@ -42,12 +42,6 @@ class Unit
     private ?\DateTimeImmutable $endDate = null;
 
     /**
-     * @var Collection<int, Transaction>
-     */
-    #[ORM\OneToMany(targetEntity: Transaction::class, mappedBy: 'unit')]
-    private Collection $transactions;
-
-    /**
      * @var Collection<int, ContributionSchedule>
      */
     #[ORM\OneToMany(targetEntity: ContributionSchedule::class, mappedBy: 'unit')]
@@ -67,7 +61,6 @@ class Unit
 
     public function __construct()
     {
-        $this->transactions = new ArrayCollection();
         $this->contributionSchedules = new ArrayCollection();
         $this->assessmentItems = new ArrayCollection();
         $this->ledgerEntries = new ArrayCollection();
@@ -158,36 +151,6 @@ class Unit
     public function setEndDate(?\DateTimeImmutable $endDate): static
     {
         $this->endDate = $endDate;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Transaction>
-     */
-    public function getTransactions(): Collection
-    {
-        return $this->transactions;
-    }
-
-    public function addTransaction(Transaction $transaction): static
-    {
-        if (!$this->transactions->contains($transaction)) {
-            $this->transactions->add($transaction);
-            $transaction->setUnit($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTransaction(Transaction $transaction): static
-    {
-        if ($this->transactions->removeElement($transaction)) {
-            // set the owning side to null (unless already changed)
-            if ($transaction->getUnit() === $this) {
-                $transaction->setUnit(null);
-            }
-        }
 
         return $this;
     }

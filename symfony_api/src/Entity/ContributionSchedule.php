@@ -41,12 +41,6 @@ class ContributionSchedule
     #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
     private ?\DateTimeImmutable $changedAt = null;
 
-    /**
-     * @var Collection<int, Payment>
-     */
-    #[ORM\OneToMany(targetEntity: Payment::class, mappedBy: 'contributionSchedule')]
-    private Collection $payments;
-
     #[ORM\ManyToOne(inversedBy: 'contributionSchedule')]
     private ?LedgerEntry $ledgerEntry = null;
 
@@ -58,7 +52,6 @@ class ContributionSchedule
 
     public function __construct()
     {
-        $this->payments = new ArrayCollection();
         $this->ledgerEntries = new ArrayCollection();
     }
 
@@ -147,36 +140,6 @@ class ContributionSchedule
     public function setChangedAt(?\DateTimeImmutable $changedAt): static
     {
         $this->changedAt = $changedAt;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Payment>
-     */
-    public function getPayments(): Collection
-    {
-        return $this->payments;
-    }
-
-    public function addPayment(Payment $payment): static
-    {
-        if (!$this->payments->contains($payment)) {
-            $this->payments->add($payment);
-            $payment->setContributionSchedule($this);
-        }
-
-        return $this;
-    }
-
-    public function removePayment(Payment $payment): static
-    {
-        if ($this->payments->removeElement($payment)) {
-            // set the owning side to null (unless already changed)
-            if ($payment->getContributionSchedule() === $this) {
-                $payment->setContributionSchedule(null);
-            }
-        }
 
         return $this;
     }

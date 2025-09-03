@@ -33,12 +33,6 @@ class AssessmentItem
     private ?AssessmentItemStatus $status = null;
 
     /**
-     * @var Collection<int, Payment>
-     */
-    #[ORM\OneToMany(targetEntity: Payment::class, mappedBy: 'assessmentItem')]
-    private Collection $payments;
-
-    /**
      * @var Collection<int, LedgerEntry>
      */
     #[ORM\OneToMany(targetEntity: LedgerEntry::class, mappedBy: 'assessmentItem')]
@@ -46,7 +40,6 @@ class AssessmentItem
 
     public function __construct()
     {
-        $this->payments = new ArrayCollection();
         $this->ledgerEntries = new ArrayCollection();
     }
 
@@ -99,36 +92,6 @@ class AssessmentItem
     public function setStatus(AssessmentItemStatus $status): static
     {
         $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Payment>
-     */
-    public function getPayments(): Collection
-    {
-        return $this->payments;
-    }
-
-    public function addPayment(Payment $payment): static
-    {
-        if (!$this->payments->contains($payment)) {
-            $this->payments->add($payment);
-            $payment->setAssessmentItem($this);
-        }
-
-        return $this;
-    }
-
-    public function removePayment(Payment $payment): static
-    {
-        if ($this->payments->removeElement($payment)) {
-            // set the owning side to null (unless already changed)
-            if ($payment->getAssessmentItem() === $this) {
-                $payment->setAssessmentItem(null);
-            }
-        }
 
         return $this;
     }

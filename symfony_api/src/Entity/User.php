@@ -68,12 +68,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $units;
 
     /**
-     * @var Collection<int, Transaction>
-     */
-    #[ORM\OneToMany(targetEntity: Transaction::class, mappedBy: 'approvedBy')]
-    private Collection $transactions;
-
-    /**
      * @var Collection<int, RegularContribution>
      */
     #[ORM\OneToMany(targetEntity: RegularContribution::class, mappedBy: 'createdBy')]
@@ -86,12 +80,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $assessments;
 
     /**
-     * @var Collection<int, Payment>
-     */
-    #[ORM\OneToMany(targetEntity: Payment::class, mappedBy: 'recorderBy')]
-    private Collection $payments;
-
-    /**
      * @var Collection<int, LedgerEntry>
      */
     #[ORM\OneToMany(targetEntity: LedgerEntry::class, mappedBy: 'recordedBy')]
@@ -101,10 +89,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->coOwners = new ArrayCollection();
         $this->units = new ArrayCollection();
-        $this->transactions = new ArrayCollection();
         $this->regularContributions = new ArrayCollection();
         $this->assessments = new ArrayCollection();
-        $this->payments = new ArrayCollection();
         $this->ledgerEntries = new ArrayCollection();
     }
 
@@ -309,36 +295,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Transaction>
-     */
-    public function getTransactions(): Collection
-    {
-        return $this->transactions;
-    }
-
-    public function addTransaction(Transaction $transaction): static
-    {
-        if (!$this->transactions->contains($transaction)) {
-            $this->transactions->add($transaction);
-            $transaction->setApprovedBy($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTransaction(Transaction $transaction): static
-    {
-        if ($this->transactions->removeElement($transaction)) {
-            // set the owning side to null (unless already changed)
-            if ($transaction->getApprovedBy() === $this) {
-                $transaction->setApprovedBy(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, RegularContribution>
      */
     public function getRegularContributions(): Collection
@@ -392,36 +348,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($assessment->getIssuedBy() === $this) {
                 $assessment->setIssuedBy(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Payment>
-     */
-    public function getPayments(): Collection
-    {
-        return $this->payments;
-    }
-
-    public function addPayment(Payment $payment): static
-    {
-        if (!$this->payments->contains($payment)) {
-            $this->payments->add($payment);
-            $payment->setRecorderBy($this);
-        }
-
-        return $this;
-    }
-
-    public function removePayment(Payment $payment): static
-    {
-        if ($this->payments->removeElement($payment)) {
-            // set the owning side to null (unless already changed)
-            if ($payment->getRecorderBy() === $this) {
-                $payment->setRecorderBy(null);
             }
         }
 
