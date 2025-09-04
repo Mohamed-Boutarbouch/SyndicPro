@@ -19,8 +19,8 @@ export default function ContributionPage() {
     error: scheduleError,
     isLoading: scheduleLoading,
   } = useSWR<ContributionScheduleResponse[]>(
-    buildingId ? `/contributions/building/${buildingId}/schedule` : null,
-    () => fetchContributionSchedule(buildingId!)
+    buildingId ? `/contributions/building/${buildingId}/schedule/year/${currentYear}` : null,
+    () => fetchContributionSchedule(buildingId!, currentYear)
   );
 
   const {
@@ -37,7 +37,11 @@ export default function ContributionPage() {
 
   return (
     <div className="flex flex-col gap-4 p-8 md:gap-6 md:p-10">
-      {buildingId && <RegisterPaymentDialog buildingId={buildingId} currentYear={currentYear} />}
+      {buildingId && <RegisterPaymentDialog
+        buildingId={buildingId}
+        regularContributionId={statsData?.regularContributionId!}
+        currentYear={currentYear}
+      />}
 
       <OverallYearlyContributionCard currentContribution={statsData} />
 

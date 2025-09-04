@@ -108,6 +108,7 @@ final class BuildingController extends AbstractController
             }
 
             $this->logger->info('Processing payment', ['buildingId' => $buildingId]);
+
             $paymentRecord = $this->contributionPaymentService->recordPayment($buildingId, $paymentRequest);
 
             $this->logger->info('Payment processed successfully', ['paymentId' => $paymentRecord->getId()]);
@@ -160,6 +161,7 @@ final class BuildingController extends AbstractController
 
         return new RecordPaymentRequest(
             unitId: (int)($data['unitId'] ?? 0),
+            regularContributionId: (int)($data['regularContributionId'] ?? 0),
             amount: (float)($data['amount'] ?? 0.0),
             paymentDate: $paymentDate,
             paymentMethod: $paymentMethod,

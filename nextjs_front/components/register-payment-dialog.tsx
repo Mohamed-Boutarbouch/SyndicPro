@@ -13,7 +13,15 @@ import { PaymentRecordForm } from "./forms/register-payment-form"
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
-export function RegisterPaymentDialog({ buildingId, currentYear }: { buildingId: number; currentYear: number }) {
+export function RegisterPaymentDialog({
+  buildingId,
+  regularContributionId,
+  currentYear
+}: {
+  buildingId: number;
+  regularContributionId: number
+  currentYear: number
+}) {
   const [open, setOpen] = useState(false)
 
   return (
@@ -37,6 +45,7 @@ export function RegisterPaymentDialog({ buildingId, currentYear }: { buildingId:
 
         <PaymentRecordForm
           buildingId={buildingId}
+          regularContributionId={regularContributionId}
           currentYear={currentYear}
           onSuccessAction={() => setOpen(false)}
         />

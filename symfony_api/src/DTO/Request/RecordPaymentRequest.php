@@ -3,7 +3,6 @@
 namespace App\DTO\Request;
 
 use App\Enum\LedgerEntryPaymentMethod;
-use App\Enum\PaymentMethod;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class RecordPaymentRequest
@@ -12,6 +11,11 @@ class RecordPaymentRequest
     #[Assert\Type('integer')]
     #[Assert\Positive(message: 'Unit ID must be a positive integer')]
     public int $unitId;
+
+    #[Assert\NotBlank]
+    #[Assert\Type('integer')]
+    #[Assert\Positive(message: 'Regular ContributionId ID must be a positive integer')]
+    public int $regularContributionId;
 
     #[Assert\NotBlank]
     #[Assert\Type('numeric')]
@@ -33,6 +37,7 @@ class RecordPaymentRequest
 
     public function __construct(
         int $unitId = 0,
+        int $regularContributionId = 0,
         float $amount = 0.0,
         ?\DateTimeInterface $paymentDate = null,
         ?LedgerEntryPaymentMethod $paymentMethod = null,
@@ -40,6 +45,7 @@ class RecordPaymentRequest
         ?string $notes = null
     ) {
         $this->unitId = $unitId;
+        $this->regularContributionId = $regularContributionId;
         $this->amount = $amount;
         $this->paymentDate = $paymentDate ?? new \DateTimeImmutable();
         $this->paymentMethod = $paymentMethod ?? LedgerEntryPaymentMethod::CASH;

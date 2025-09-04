@@ -104,7 +104,8 @@ export const columns: ColumnDef<ContributionScheduleResponse>[] = [
           className={cn(
             "capitalize",
             status === "paid" && "bg-green-100 text-green-800 border-green-200",
-            status === "overdue" && "bg-red-100 text-red-800 border-red-200"
+            status === "overdue" && "bg-red-100 text-red-800 border-red-200",
+            status === "pending" && "bg-yellow-100 text-yellow-800 border-yellow-200"
           )}
         >
           {status}
@@ -113,9 +114,9 @@ export const columns: ColumnDef<ContributionScheduleResponse>[] = [
     },
   },
   {
-    accessorKey: "totalPaid",
+    accessorKey: "actualPaidAmountPerUnit",
     header: "Total Paid",
-    cell: ({ row }) => formatMoney(row.getValue<number>("totalPaid"))
+    cell: ({ row }) => formatMoney(row.getValue<number>("actualPaidAmountPerUnit"))
   },
   {
     accessorKey: "nextDueDate",

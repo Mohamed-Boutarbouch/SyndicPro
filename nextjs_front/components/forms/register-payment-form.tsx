@@ -54,9 +54,11 @@ const fetcher = (url: string): Promise<ResidentsFormResponse[]> => api.get(url).
 export function PaymentRecordForm({
   buildingId,
   currentYear,
+  regularContributionId,
   onSuccessAction,
 }: {
   buildingId: number
+  regularContributionId: number
   currentYear: number
   onSuccessAction?: () => void
 }) {
@@ -106,6 +108,7 @@ export function PaymentRecordForm({
       const payload = {
         ...values,
         unitId: parseInt(values.unitId, 10),
+        regularContributionId,
       }
 
       console.log("Submitting payload:", payload);
@@ -116,7 +119,7 @@ export function PaymentRecordForm({
       console.log("Payment recorded successfully:", result);
 
       // Refresh the schedule query
-      mutate(`/contributions/building/${buildingId}/schedule`);
+      mutate(`/contributions/building/${buildingId}/schedule/year/${currentYear}`);
       mutate(`/contributions/building/${buildingId}/stats/year/${currentYear}`)
       form.reset({
         unitId: "",

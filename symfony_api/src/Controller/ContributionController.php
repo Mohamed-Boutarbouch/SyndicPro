@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\DTO\Response\UnitContributionResponse;
-use App\Repository\BuildingRepository;
 use App\Repository\RegularContributionRepository;
 use App\Repository\UnitRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,24 +21,24 @@ final class ContributionController extends AbstractController
     #[Route('/building/{buildingId}/stats/year/{year}', methods: ['GET'], name: 'stats')]
     public function stats(int $buildingId, int $year): Response
     {
-        $stats = $this->regularContributionRepository->findRegularContributionReport($buildingId, $year);
+        $stats = $this->regularContributionRepository->getRegularContributionSummary($buildingId, $year);
 
         return $this->json(
             UnitContributionResponse::fromData($stats),
             status: 200,
-            context: ['groups' => ['contribution:stats']]
+            context: ['groups' => ['contribution:card-stats']]
         );
     }
 
-    #[Route('/building/{buildingId}/schedule', methods: ['GET'], name: 'schedule')]
-    public function schedule(int $buildingId): Response
+    #[Route('/building/{buildingId}/schedule/year/{year}', methods: ['GET'], name: 'schedule')]
+    public function schedule(int $buildingId, int $year): Response
     {
-        $stats = $this->unitRepository->getContributionOverviewByBuilding($buildingId);
+        $stats = $this->regularContributionRepository->findRegularContributionReport($buildingId, $year);
 
         return $this->json(
             UnitContributionResponse::fromDataArray($stats),
             status: 200,
-            context: ['groups' => ['contribution:overview']]
+            context: ['groups' => ['contribution:schedule-table']]
         );
     }
 }

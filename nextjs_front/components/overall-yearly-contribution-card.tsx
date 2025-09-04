@@ -7,6 +7,7 @@ import { Separator } from "./ui/separator";
 import { Progress } from "./ui/progress";
 import { ArrowBigRight, Calendar } from "lucide-react";
 import { formatMoney } from "@/lib/formatMoney";
+import { format, parseISO } from "date-fns";
 
 interface Props {
   currentContribution: BuildingContributionStats | undefined;
@@ -36,10 +37,14 @@ export function OverallYearlyContributionCard({ currentContribution }: Props) {
           <div className="text-lg text-muted-foreground">
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-muted-foreground" />
-              <span className="text-foreground">{currentContribution.periodStartDate}</span>
+              <span className="text-foreground">
+                {format(parseISO(currentContribution.periodStartDate.toString()), 'dd-MM-yyyy')}
+              </span>
               <ArrowBigRight className="h-4 w-4 text-muted-foreground" />
               <Calendar className="h-4 w-4 text-muted-foreground" />
-              <span className="text-foreground">{currentContribution.periodEndDate}</span>
+              <span className="text-foreground">
+                {format(parseISO(currentContribution.periodEndDate.toString()), 'dd-MM-yyyy')}
+              </span>
             </div>
           </div>
         </div>

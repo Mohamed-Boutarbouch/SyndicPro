@@ -3,69 +3,78 @@
 namespace App\DTO\Response;
 
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\Enum\ContributionFrequency;
 
 class UnitContributionResponse
 {
-    // Existing "overview" fields
-    #[Groups(['contribution:overview'])]
+    #[Groups(['contribution:schedule-table'])]
+    public int $ownerId;
+
+    #[Groups(['contribution:schedule-table'])]
     public int $unitId;
 
-    #[Groups(['contribution:overview'])]
+    #[Groups(['contribution:schedule-table'])]
     public string $unitNumber;
 
-    #[Groups(['contribution:overview'])]
+    #[Groups(['contribution:schedule-table'])]
     public string $ownerFirstName;
 
-    #[Groups(['contribution:overview'])]
+    #[Groups(['contribution:schedule-table'])]
     public string $ownerLastName;
 
-    #[Groups(['contribution:overview'])]
+    #[Groups(['contribution:schedule-table'])]
     public string $ownerFullName;
 
-    #[Groups(['contribution:overview'])]
+    #[Groups(['contribution:schedule-table'])]
     public string $frequency;
 
-    #[Groups(['contribution:overview'])]
+    #[Groups(['contribution:schedule-table'])]
     public float $amountPerPayment;
 
-    #[Groups(['contribution:overview'])]
-    public ?string $nextDueDate;
+    #[Groups(['contribution:schedule-table'])]
+    public ?\DateTimeImmutable $nextDueDate;
 
-    #[Groups(['contribution:overview'])]
-    public float $totalPaid;
-
-    #[Groups(['contribution:overview'])]
+    #[Groups(['contribution:schedule-table'])]
     public string $paymentStatus;
 
-    #[Groups(['contribution:stats'])]
+    #[Groups(['contribution:schedule-table'])]
+    public float $scheduleId;
+
+    #[Groups(['contribution:schedule-table'])]
+    public float $unitFloor;
+
+    #[Groups(['contribution:card-stats', 'contribution:schedule-table'])]
     public int $buildingId;
 
-    #[Groups(['contribution:stats'])]
+    #[Groups(['contribution:card-stats'])]
     public string $buildingName;
 
-    #[Groups(['contribution:stats'])]
+    #[Groups(['contribution:card-stats'])]
     public int $paymentYear;
 
-    #[Groups(['contribution:stats'])]
-    public string $periodStartDate;
+    #[Groups(['contribution:card-stats'])]
+    public ?\DateTimeImmutable $periodStartDate;
 
-    #[Groups(['contribution:stats'])]
-    public string $periodEndDate;
+    #[Groups(['contribution:card-stats'])]
+    public ?\DateTimeImmutable $periodEndDate;
 
-    #[Groups(['contribution:stats'])]
+    #[Groups(['contribution:card-stats'])]
     public float $amountPerUnit;
 
-    #[Groups(['contribution:stats'])]
+    #[Groups(['contribution:card-stats', 'contribution:schedule-table'])]
     public int $regularContributionId;
 
-    #[Groups(['contribution:stats'])]
+    #[Groups(['contribution:card-stats'])]
     public float $totalAnnualAmount;
 
-    #[Groups(['contribution:stats'])]
+    #[Groups(['contribution:card-stats'])]
     public float $totalPaidAmount;
 
-    #[Groups(['contribution:stats'])]
-    public int $totalPayments;
+    #[Groups(['contribution:schedule-table'])]
+    public float $actualPaidAmountPerUnit;
+
+    #[Groups(['contribution:card-stats'])]
+    public int $totalPaymentCount;
 
     /**
      * Creates a UnitContributionResponse from an array of contribution data.
@@ -74,23 +83,50 @@ class UnitContributionResponse
     {
         $dto = new self();
 
+        $dto->ownerId = (int) ($data['ownerId'] ?? 0);
         $dto->unitId = (int) ($data['unitId'] ?? 0);
         $dto->unitNumber = (string) ($data['unitNumber'] ?? '');
 
         $dto->ownerFullName = trim(($data['ownerLastName'] ?? '') . ' ' . ($data['ownerFirstName'] ?? ''));
 
-        $dto->frequency = (string) ($data['frequency'] ?? '');
-        $dto->amountPerPayment = (float) ($data['amountPerPayment'] ?? 0.0);
-        $dto->nextDueDate = $data['nextDueDate'] ?? null;
-        $dto->totalPaid = (float) ($data['totalPaid'] ?? 0.0);
-        $dto->amountPerUnit = (float) ($data['amountPerUnit'] ?? 0.0);
+        $dto->frequency = isset($data['frequency'])
+            ? ($data['frequency'] instanceof ContributionFrequency ? $data['frequency']->value : (string) $data['frequency'])
+            : '';
 
-        if ($dto->nextDueDate !== null) {
-            $now = new \DateTimeImmutable();
-            $nextDue = new \DateTimeImmutable($dto->nextDueDate);
-            $dto->paymentStatus = $now > $nextDue ? 'overdue' : 'paid';
-        } else {
+        $dto->amountPerPayment = (float) ($data['amountPerPayment'] ?? 0.0);
+
+        // nextDueDate
+        $dto->nextDueDate = match (true) {
+            empty($data['nextDueDate']) => null,
+            $data['nextDueDate'] instanceof \DateTimeInterface => \DateTimeImmutable::createFromInterface($data['nextDueDate']),
+            default => new \DateTimeImmutable((string) $data['nextDueDate']),
+        };
+
+        // periodStartDate
+        $dto->periodStartDate = match (true) {
+            empty($data['periodStartDate']) => null,
+            $data['periodStartDate'] instanceof \DateTimeInterface => \DateTimeImmutable::createFromInterface($data['periodStartDate']),
+            default => new \DateTimeImmutable((string) $data['periodStartDate']),
+        };
+
+        // periodEndDate
+        $dto->periodEndDate = match (true) {
+            empty($data['periodEndDate']) => null,
+            $data['periodEndDate'] instanceof \DateTimeInterface => \DateTimeImmutable::createFromInterface($data['periodEndDate']),
+            default => new \DateTimeImmutable((string) $data['periodEndDate']),
+        };
+
+        $dto->amountPerUnit = (float) ($data['amountPerUnit'] ?? 0.0);
+        $dto->amountPerUnit = (float) ($data['amountPerUnit'] ?? 0.0);
+        $dto->actualPaidAmountPerUnit = (float) ($data['actualPaidAmountPerUnit'] ?? 0.0); // move this up
+
+        $now = new \DateTimeImmutable();
+        if ($dto->actualPaidAmountPerUnit >= $dto->amountPerPayment) {
             $dto->paymentStatus = 'paid';
+        } elseif ($dto->nextDueDate && $now > $dto->nextDueDate) {
+            $dto->paymentStatus = 'overdue';
+        } else {
+            $dto->paymentStatus = 'pending';
         }
 
         $dto->buildingId = (int) ($data['buildingId'] ?? 0);
@@ -99,34 +135,11 @@ class UnitContributionResponse
         $dto->regularContributionId = (int) ($data['regularContributionId'] ?? 0);
         $dto->totalAnnualAmount = (float) ($data['totalAnnualAmount'] ?? 0.0);
         $dto->totalPaidAmount = (float) ($data['totalPaidAmount'] ?? 0.0);
-        $dto->totalPayments = (int) ($data['totalPayments'] ?? 0);
+        $dto->totalPaymentCount = (int) ($data['totalPaymentCount'] ?? 0);
 
-        // Format the date properly
-        if (isset($data['periodStartDate'])) {
-            if ($data['periodStartDate'] instanceof \DateTimeInterface) {
-                $dto->periodStartDate = $data['periodStartDate']->format('d-m-Y');
-            } elseif (is_string($data['periodStartDate'])) {
-                $date = new \DateTime($data['periodStartDate']);
-                $dto->periodStartDate = $date->format('d-m-Y');
-            } else {
-                $dto->periodStartDate = (string) $data['periodStartDate'];
-            }
-        } else {
-            $dto->periodStartDate = '';
-        }
+        $dto->scheduleId = (int) ($data['scheduleId'] ?? 0);
+        $dto->unitFloor = (int) ($data['unitFloor'] ?? 0);
 
-        if (isset($data['periodEndDate'])) {
-            if ($data['periodEndDate'] instanceof \DateTimeInterface) {
-                $dto->periodEndDate = $data['periodEndDate']->format('d-m-Y');
-            } elseif (is_string($data['periodEndDate'])) {
-                $date = new \DateTime($data['periodEndDate']);
-                $dto->periodEndDate = $date->format('d-m-Y');
-            } else {
-                $dto->periodEndDate = (string) $data['periodEndDate'];
-            }
-        } else {
-            $dto->periodEndDate = '';
-        }
         return $dto;
     }
 

@@ -55,9 +55,11 @@ class ContributionPaymentService
 
             $building = $this->buildingRepository->find($buildingId);
 
-            $regularContributionId = 1; // hardcoded for now
             $schedule = $this->contributionScheduleRepository
-                ->findByRegularContributionAndUnit($regularContributionId, $unit->getId());
+                ->findByRegularContributionAndUnit(
+                    $request->regularContributionId,
+                    $unit->getId()
+                );
 
             $ledgerEntry = new LedgerEntry();
             $ledgerEntry->setBuilding($building);
@@ -75,25 +77,24 @@ class ContributionPaymentService
                 throw new \RuntimeException('Contribution schedule not found for this unit.');
             }
 
-            // Calculate next due date
             $frequency = $schedule->getFrequency()?->value;
             $nextDueDate = $schedule->getNextDueDate();
 
             switch ($frequency) {
                 case 'monthly':
-                    $nextDueDate = (clone $nextDueDate)->modify('first day of next month')->modify('-1 day');
+                    $nextDueDate = (clone $nextDueDate)->modify('last day of next month');
                     break;
                 case 'bi_monthly':
-                    $nextDueDate = (clone $nextDueDate)->modify('first day of +2 months')->modify('-1 day');
+                    $nextDueDate = (clone $nextDueDate)->modify('last day of +2 months');
                     break;
                 case 'quarterly':
-                    $nextDueDate = (clone $nextDueDate)->modify('first day of +3 months')->modify('-1 day');
+                    $nextDueDate = (clone $nextDueDate)->modify('last day of +3 months');
                     break;
                 case 'four_monthly':
-                    $nextDueDate = (clone $nextDueDate)->modify('first day of +4 months')->modify('-1 day');
+                    $nextDueDate = (clone $nextDueDate)->modify('last day of +4 months');
                     break;
                 case 'yearly':
-                    $nextDueDate = (clone $nextDueDate)->modify('first day of next year')->modify('-1 day');
+                    $nextDueDate = (clone $nextDueDate)->modify('last day of December +1 year');
                     break;
                 default:
                     throw new \RuntimeException('Unknown contribution frequency: ' . $frequency);
