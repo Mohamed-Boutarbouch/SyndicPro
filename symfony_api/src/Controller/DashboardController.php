@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 use App\DTO\Response\DashboardResponse;
+use App\Repository\BuildingRepository;
+use App\Repository\LedgerEntryRepository;
+use App\Repository\UnitRepository;
 use App\Service\DashboardService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,14 +15,30 @@ use Symfony\Component\Routing\Attribute\Route;
 final class DashboardController extends AbstractController
 {
     public function __construct(
-        private DashboardService $dashboardService
+        private BuildingRepository $buildingRepository,
+        private DashboardService $dashboardService,
+        private UnitRepository $unitRepository,
+        private LedgerEntryRepository $ledgerEntryRepository
     ) {
     }
 
+    /**
+     * Get card statistics for a specific building
+     */
     #[Route('/building/{buildingId}/cards', methods: ['GET'], name: 'cards')]
     public function cards(int $buildingId): Response
     {
-        $stats = $this->dashboardService->getCardStats($buildingId);
+        echo json_encode([
+            'getTotalIncomeByBuilding' => $this->ledgerEntryRepository->getTotalIncomeByBuilding($buildingId),
+            'getTotalExpensesByBuilding' => $this->ledgerEntryRepository->getTotalExpensesByBuilding($buildingId),
+            'actualBalance' => $this->ledgerEntryRepository->getTotalIncomeByBuilding($buildingId) - $this->ledgerEntryRepository->getTotalExpensesByBuilding($buildingId),
+            'getMonthlyCashFlowByBuilding' => $this->ledgerEntryRepository->getMonthlyCashFlowByBuilding($buildingId),
+            'getActiveUnitsByBuilding' => $this->unitRepository->getActiveUnitsByBuilding($buildingId),
+            'getActiveUnitsByBuildingApartmentOnly' => $this->unitRepository->getActiveUnitsByBuildingAndType($buildingId, 'apartment'),
+            'getActiveUnitsByBuildingCommercialOnly' => $this->unitRepository->getActiveUnitsByBuildingAndType($buildingId, 'commercial_local')
+        ]);
+        die;
+        $stats = $this->buildingRepository->getBuildingCardStats($buildingId);
 
         return $this->json(
             DashboardResponse::fromData($stats),

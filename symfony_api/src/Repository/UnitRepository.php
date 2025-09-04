@@ -16,6 +16,40 @@ class UnitRepository extends ServiceEntityRepository
         parent::__construct($registry, Unit::class);
     }
 
+    public function getActiveUnitsByBuilding(int $buildingId): array
+    {
+        $activeUnits = $this->createQueryBuilder('u')
+            ->select('u.type AS type, COUNT(u.id) AS count')
+            ->where('u.building = :buildingId')
+            ->andWhere('u.user IS NOT NULL') // correct: use 'u.user'
+            ->andWhere('u.type IN (:types)')
+            ->setParameter('buildingId', $buildingId)
+            ->setParameter('types', ['apartment', 'commercial_local'])
+            ->groupBy('u.type') // also prefix groupBy with alias
+            ->getQuery()
+            ->getArrayResult();
+
+        $totalActiveUnits = array_sum(array_column($activeUnits, 'count'));
+
+        return [
+            'totalActiveUnits' => $totalActiveUnits,
+            'breakdownByType' => $activeUnits
+        ];
+    }
+
+    public function getActiveUnitsByBuildingAndType(int $buildingId, string $type): int
+    {
+        return (int) $this->createQueryBuilder('unit')
+            ->select('COUNT(unit.id)')
+            ->where('unit.building = :buildingId')
+            ->andWhere('unit.user IS NOT NULL')
+            ->andWhere('unit.type = :type')
+            ->setParameter('buildingId', $buildingId)
+            ->setParameter('type', $type)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     /**
      * Get contribution overview for each unit per building
      */

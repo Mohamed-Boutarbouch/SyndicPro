@@ -14,14 +14,6 @@ class DashboardService
     }
 
     /**
-     * Get card statistics for a specific building
-     */
-    public function getCardStats(int $buildingId): array
-    {
-        return $this->buildingRepository->getBuildingCardStats($buildingId);
-    }
-
-    /**
      * Get income and expenses data for the last 6 months
      */
     public function getIncomeExpenses(int $buildingId): array
