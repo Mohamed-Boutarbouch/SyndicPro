@@ -120,13 +120,12 @@ class UnitContributionResponse
         $dto->amountPerUnit = (float) ($data['amountPerUnit'] ?? 0.0);
         $dto->actualPaidAmountPerUnit = (float) ($data['actualPaidAmountPerUnit'] ?? 0.0); // move this up
 
-        $now = new \DateTimeImmutable();
-        if ($dto->actualPaidAmountPerUnit >= $dto->amountPerPayment) {
-            $dto->paymentStatus = 'paid';
-        } elseif ($dto->nextDueDate && $now > $dto->nextDueDate) {
-            $dto->paymentStatus = 'overdue';
+        if ($dto->nextDueDate !== null) {
+            $now = new \DateTimeImmutable();
+            $nextDue = $dto->nextDueDate;
+            $dto->paymentStatus = $now > $nextDue ? 'overdue' : 'paid';
         } else {
-            $dto->paymentStatus = 'pending';
+            $dto->paymentStatus = 'paid';
         }
 
         $dto->buildingId = (int) ($data['buildingId'] ?? 0);
