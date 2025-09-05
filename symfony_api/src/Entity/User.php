@@ -85,6 +85,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: LedgerEntry::class, mappedBy: 'recordedBy')]
     private Collection $ledgerEntries;
 
+    /**
+     * @var Collection<int, Receipt>
+     */
+    #[ORM\OneToMany(targetEntity: Receipt::class, mappedBy: 'createdBy')]
+    private Collection $receipts;
+
     public function __construct()
     {
         $this->coOwners = new ArrayCollection();
@@ -92,6 +98,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->regularContributions = new ArrayCollection();
         $this->assessments = new ArrayCollection();
         $this->ledgerEntries = new ArrayCollection();
+        $this->receipts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -378,6 +385,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($ledgerEntry->getRecordedBy() === $this) {
                 $ledgerEntry->setRecordedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Receipt>
+     */
+    public function getReceipts(): Collection
+    {
+        return $this->receipts;
+    }
+
+    public function addReceipt(Receipt $receipt): static
+    {
+        if (!$this->receipts->contains($receipt)) {
+            $this->receipts->add($receipt);
+            $receipt->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReceipt(Receipt $receipt): static
+    {
+        if ($this->receipts->removeElement($receipt)) {
+            // set the owning side to null (unless already changed)
+            if ($receipt->getCreatedBy() === $this) {
+                $receipt->setCreatedBy(null);
             }
         }
 
