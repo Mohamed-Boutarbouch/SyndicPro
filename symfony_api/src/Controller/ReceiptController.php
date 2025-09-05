@@ -48,7 +48,7 @@ class ReceiptController extends AbstractController
         try {
             // Dummy payment/user data
             $data = [
-                'fullName' => $syndic->getFirstName() . ' ' . $syndic->getLastName(),
+                'fullName' => $syndic->getFirstName() . ' ' . strtoupper($syndic->getLastName()),
                 'unitNumber' => $syndic->getUnits()->first()->getNumber(),
                 'createdDate' => (new \DateTimeImmutable())->format('d/m/Y'),
                 'amount' => '250 MAD',

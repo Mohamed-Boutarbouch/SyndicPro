@@ -4,28 +4,37 @@
         "filePath": "/public/templates/template.pdf",
         "placeholders": [
             {
+                "x": 105,
+                "y": 75,
                 "key": "fullName",
-                "x": 50,
-                "y": 80,
-                "fontSize": 12
+                "fontSize": 34,
+                "fontStyle": "B"
             },
             {
-                "key": "amount",
-                "x": 50,
-                "y": 100,
-                "fontSize": 12
-            },
-            {
+                "x": 35,
+                "y": 32,
                 "key": "unitNumber",
-                "x": 50,
-                "y": 120,
-                "fontSize": 12
+                "fontSize": 28,
+                "fontStyle": "B"
             },
             {
+                "x": 120,
+                "y": 95,
+                "key": "amount",
+                "color": [
+                    255,
+                    0,
+                    0
+                ],
+                "fontSize": 34,
+                "fontStyle": "B"
+            },
+            {
+                "x": 115,
+                "y": 115,
                 "key": "createdDate",
-                "x": 50,
-                "y": 140,
-                "fontSize": 12
+                "fontSize": 34,
+                "fontStyle": "B"
             }
         ],
         "created_by_id": 1
