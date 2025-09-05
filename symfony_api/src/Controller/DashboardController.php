@@ -25,20 +25,28 @@ final class DashboardController extends AbstractController
     /**
      * Get card statistics for a specific building
      */
-    #[Route('/building/{buildingId}/cards', methods: ['GET'], name: 'cards')]
+    #[Route('/{buildingId}/cards', methods: ['GET'], name: 'cards')]
     public function cards(int $buildingId): Response
     {
-        echo json_encode([
-            'getTotalIncomeByBuilding' => $this->ledgerEntryRepository->getTotalIncomeByBuilding($buildingId),
-            'getTotalExpensesByBuilding' => $this->ledgerEntryRepository->getTotalExpensesByBuilding($buildingId),
-            'actualBalance' => $this->ledgerEntryRepository->getTotalIncomeByBuilding($buildingId) - $this->ledgerEntryRepository->getTotalExpensesByBuilding($buildingId),
-            'getMonthlyCashFlowByBuilding' => $this->ledgerEntryRepository->getMonthlyCashFlowByBuilding($buildingId),
-            'getActiveUnitsByBuilding' => $this->unitRepository->getActiveUnitsByBuilding($buildingId),
-            'getActiveUnitsByBuildingApartmentOnly' => $this->unitRepository->getActiveUnitsByBuildingAndType($buildingId, 'apartment'),
-            'getActiveUnitsByBuildingCommercialOnly' => $this->unitRepository->getActiveUnitsByBuildingAndType($buildingId, 'commercial_local')
-        ]);
-        die;
-        $stats = $this->buildingRepository->getBuildingCardStats($buildingId);
+        $totalIncome = $this->ledgerEntryRepository->getTotalIncomeByBuilding($buildingId);
+        $totalExpenses = $this->ledgerEntryRepository->getTotalExpensesByBuilding($buildingId);
+        $currentMonthCashFlow = $this->ledgerEntryRepository->getCurrentMonthCashFlowByBuilding($buildingId);
+
+        $activeUnits = $this->unitRepository->getActiveUnitsByBuilding($buildingId);
+        $activeApartments = $this->unitRepository->getActiveUnitsByBuildingAndType($buildingId, 'apartment');
+        $activeCommercialUnits = $this
+            ->unitRepository
+            ->getActiveUnitsByBuildingAndType($buildingId, 'commercial_local');
+
+        $stats = [
+            'totalIncome' => $totalIncome,
+            'totalExpenses' => $totalExpenses,
+            'actualBalance' => $totalIncome - $totalExpenses,
+            'currentMonthCashFlow' => $currentMonthCashFlow,
+            'activeUnits' => $activeUnits,
+            'activeApartments' => $activeApartments,
+            'activeCommercialUnits' => $activeCommercialUnits,
+        ];
 
         return $this->json(
             DashboardResponse::fromData($stats),
@@ -47,7 +55,7 @@ final class DashboardController extends AbstractController
         );
     }
 
-    #[Route('/building/{buildingId}/income-expenses', methods: ['GET'], name: 'income_expenses')]
+    #[Route('/{buildingId}/income-expenses', methods: ['GET'], name: 'income_expenses')]
     public function incomeAndExpenses(int $buildingId): Response
     {
         $stats = $this->dashboardService->getIncomeExpenses($buildingId);
@@ -59,7 +67,7 @@ final class DashboardController extends AbstractController
         );
     }
 
-    #[Route('/building/{buildingId}/expenses-distribution', methods: ['GET'], name: 'expenses_distribution')]
+    #[Route('/{buildingId}/expenses-distribution', methods: ['GET'], name: 'expenses_distribution')]
     public function expensesDistribution(int $buildingId): Response
     {
         $stats = $this->dashboardService->getExpensesDistribution($buildingId);

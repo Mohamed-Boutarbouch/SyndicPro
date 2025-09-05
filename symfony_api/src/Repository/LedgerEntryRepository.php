@@ -47,26 +47,35 @@ class LedgerEntryRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function getMonthlyCashFlowByBuilding(int $buildingId): array
+    public function getCurrentMonthCashFlowByBuilding(int $buildingId): array
     {
-        $results = $this->createQueryBuilder('le')
-            ->select('YEAR(le.createdAt) AS year, MONTH(le.createdAt) AS month')
-            ->addSelect('SUM(CASE WHEN le.type = :income THEN le.amount ELSE 0 END) AS totalIncome')
-            ->addSelect('SUM(CASE WHEN le.type = :expense THEN le.amount ELSE 0 END) AS totalExpense')
+        $startOfMonth = new \DateTime('first day of this month 00:00:00');
+        $endOfMonth = new \DateTime('last day of this month 23:59:59');
+
+        $result = $this->createQueryBuilder('le')
+            ->select('
+            SUM(CASE WHEN le.type = :income THEN le.amount ELSE 0 END) AS totalIncome,
+            SUM(CASE WHEN le.type = :expense THEN le.amount ELSE 0 END) AS totalExpense
+        ')
             ->where('le.building = :buildingId')
+            ->andWhere('le.createdAt BETWEEN :start AND :end')
             ->setParameter('buildingId', $buildingId)
             ->setParameter('income', 'income')
             ->setParameter('expense', 'expense')
-            ->groupBy('year, month')
-            ->orderBy('year, month')
+            ->setParameter('start', $startOfMonth)
+            ->setParameter('end', $endOfMonth)
             ->getQuery()
-            ->getArrayResult();
+            ->getSingleResult();
 
-        foreach ($results as &$row) {
-            $row['totalIncome'] = (float) $row['totalIncome'];
-            $row['totalExpense'] = (float) $row['totalExpense'];
-        }
+        $income = (float) ($result['totalIncome'] ?? 0);
+        $expenses = (float) ($result['totalExpense'] ?? 0);
 
-        return $results;
+        return [
+            'year' => (int) date('Y'),
+            'month' => (int) date('n'),
+            'totalIncome' => $income,
+            'totalExpenses' => $expenses,
+            'currentBalance' => $income - $expenses,
+        ];
     }
 }

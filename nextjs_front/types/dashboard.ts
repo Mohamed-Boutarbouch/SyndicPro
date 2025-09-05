@@ -1,19 +1,29 @@
-export interface ActiveUnit {
+export interface ActiveUnitCount {
   count: number;
   type: 'apartment' | 'commercial_local' | 'other';
 };
 
-export interface DashboardCardResponse {
-  activeUnits: ActiveUnit[];
-  balancePercentChange: number | null;
-  currentBalance: number;
-  currentMonthIncome: number;
-  incomePercentChange: number | null;
-  lastMonthBalance: number;
-  previousMonthIncome: number;
-  totalPendingAmount: number;
-  totalPendingItems: number;
+export interface ActiveUnit {
+  breakdownByType: ActiveUnitCount[];
   totalActiveUnits: number;
+};
+
+export interface CurrentMonthCashFlow {
+  month: number;
+  year: number;
+  totalExpenses: number;
+  totalIncome: number;
+  currentBalance: number;
+}
+
+export interface DashboardCardStatsResponse {
+  activeApartments: number;
+  activeCommercialUnits: number;
+  activeUnits: ActiveUnit;
+  actualBalance: number;
+  currentMonthCashFlow: CurrentMonthCashFlow;
+  totalExpenses: number;
+  totalIncome: number;
 };
 
 export interface MonthlyIncomeExpensesItem {
