@@ -6,6 +6,7 @@ use App\Entity\AssessmentItem;
 use App\Entity\Building;
 use App\Entity\ContributionSchedule;
 use App\Entity\LedgerEntry;
+use App\Entity\Receipt;
 use App\Entity\Unit;
 use App\Entity\User;
 use App\Enum\LedgerEntryExpenseCategory;
@@ -82,6 +83,8 @@ class LedgerEntryFixtures extends Fixture implements DependentFixtureInterface
             $ledgerEntry->setRecordedBy($recordedBy);
 
             $manager->persist($ledgerEntry);
+
+            $this->addReference('ledger_entry_' . $item['id'], $ledgerEntry);
         }
 
         $manager->flush();

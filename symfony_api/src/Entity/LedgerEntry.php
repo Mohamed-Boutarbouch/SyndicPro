@@ -60,6 +60,9 @@ class LedgerEntry
     #[ORM\ManyToOne(inversedBy: 'ledgerEntries')]
     private ?User $recordedBy = null;
 
+    #[ORM\OneToOne(mappedBy: 'ledgerEntry', cascade: ['persist', 'remove'])]
+    private ?Receipt $receipt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -217,6 +220,28 @@ class LedgerEntry
     public function setRecordedBy(?User $recordedBy): static
     {
         $this->recordedBy = $recordedBy;
+
+        return $this;
+    }
+
+    public function getReceipt(): ?Receipt
+    {
+        return $this->receipt;
+    }
+
+    public function setReceipt(?Receipt $receipt): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($receipt === null && $this->receipt !== null) {
+            $this->receipt->setLedgerEntry(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($receipt !== null && $receipt->getLedgerEntry() !== $this) {
+            $receipt->setLedgerEntry($this);
+        }
+
+        $this->receipt = $receipt;
 
         return $this;
     }

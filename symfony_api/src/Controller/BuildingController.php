@@ -116,6 +116,13 @@ final class BuildingController extends AbstractController
             return $this->json([
                 'success' => true,
                 'message' => 'Payment recorded successfully',
+                'paymentId' => $paymentRecord->getId(),
+                'receipt' => $paymentRecord->getReceipt()
+                    ? [
+                        'id' => $paymentRecord->getReceipt()->getId(),
+                        'filePath' => $paymentRecord->getReceipt()->getFilePath(),
+                      ]
+                    : null,
             ], Response::HTTP_CREATED);
         } catch (\InvalidArgumentException $e) {
             $this->logger->error('Invalid argument exception', [

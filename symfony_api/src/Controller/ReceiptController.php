@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Receipt;
 use App\Entity\User;
 use App\Repository\ReceiptRepository;
 use App\Service\ReceiptGenerator;
@@ -18,8 +19,27 @@ class ReceiptController extends AbstractController
     ) {
     }
 
-    #[Route('/{id}', name: 'download', methods: 'GET')]
-    public function download(User $syndic, ReceiptGenerator $generator): Response
+    #[Route('/{id}/download', name: 'download', methods: ['GET'])]
+    public function download(Receipt $receipt): Response
+    {
+        $filePath = $this->getParameter('kernel.project_dir') . '/public/' . $receipt->getFilePath();
+
+        if (!file_exists($filePath)) {
+            throw $this->createNotFoundException('Receipt file not found');
+        }
+
+        return new Response(
+            file_get_contents($filePath),
+            200,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . $receipt->getNumber() . '"',
+            ]
+        );
+    }
+
+    #[Route('/{id}', name: 'downloads', methods: 'GET')]
+    public function test(User $syndic, ReceiptGenerator $generator): Response
     {
         $template = $this->receiptRepository->findOneBy(['createdBy' => $syndic]);
 

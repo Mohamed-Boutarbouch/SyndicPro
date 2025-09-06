@@ -4,6 +4,8 @@ namespace App\Service;
 
 use App\DTO\Request\RecordPaymentRequest;
 use App\Entity\LedgerEntry;
+use App\Entity\Receipt;
+use App\Entity\ReceiptTemplate;
 use App\Enum\LedgerEntryIncomeType;
 use App\Enum\LedgerEntryType;
 use App\Repository\BuildingRepository;
@@ -13,6 +15,7 @@ use App\Repository\ContributionScheduleRepository;
 use App\Repository\RegularContributionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Uid\Uuid;
 
 class ContributionPaymentService
 {
@@ -23,6 +26,7 @@ class ContributionPaymentService
         private UserRepository $userRepository,
         private RegularContributionRepository $regularContributionRepository,
         private ContributionScheduleRepository $contributionScheduleRepository,
+        private ReceiptGenerator $receiptGenerator,
         private LoggerInterface $logger
     ) {
     }
@@ -101,6 +105,64 @@ class ContributionPaymentService
             }
 
             $schedule->setNextDueDate($nextDueDate);
+
+            if (
+                $ledgerEntry->getType() === LedgerEntryType::INCOME &&
+                $ledgerEntry->getIncomeType() === LedgerEntryIncomeType::REGULAR_CONTRIBUTION
+            ) {
+                try {
+                    $template = $this->entityManager->getRepository(ReceiptTemplate::class)
+                        ->findOneBy(['building' => $building, 'createdBy' => $user]);
+
+                    if ($template) {
+                        $receiptData = [
+                            'fullName'    => $unit->getUser()->getFirstName() . ' ' . strtoupper($unit->getUser()->getLastName()),
+                            'unitNumber'  => $unit->getNumber(),
+                            'createdDate' => (new \DateTimeImmutable())->format('d/m/Y'),
+                            'amount'      => number_format($request->amount, 2) . ' MAD',
+                        ];
+
+                        $pdfBytes = $this->receiptGenerator->generateToStream($template, $receiptData);
+
+                        // Create and persist a new Receipt entity linked to the payment
+                        $receipt = new Receipt();
+                        $receipt->setLedgerEntry($ledgerEntry);
+                        $receipt->setGeneratedBy($user);
+                        $receipt->setNumber(Uuid::v4()->toRfc4122());
+                        $receipt->setBuilding($building);
+                        $receipt->setUnit($unit);
+                        $receipt->setContributionSchedule($schedule);
+                        $receipt->setTemplate($template);
+
+
+                        // Ensure upload folder exists
+                        $uploadDir = __DIR__ . '/../../public/uploads/receipts';
+                        if (!is_dir($uploadDir)) {
+                            mkdir($uploadDir, 0777, true);
+                        }
+
+                        // Define file name
+                        $fileName = 'receipt_' . $receipt->getNumber() . '.pdf';
+                        $filePath = $uploadDir . '/' . $fileName;
+
+                        // Save PDF to disk
+                        file_put_contents($filePath, $pdfBytes);
+
+                        // Store relative path in DB
+                        $receipt->setFilePath('uploads/receipts/' . $fileName);
+
+                        $this->entityManager->persist($receipt);
+                        $this->entityManager->flush();
+
+                        $ledgerEntry->setReceipt($receipt);
+                    }
+                } catch (\Exception $e) {
+                    $this->logger->error('Receipt generation failed', [
+                        'ledgerEntryId' => $ledgerEntry->getId(),
+                        'error' => $e->getMessage()
+                    ]);
+                }
+            }
 
             $this->entityManager->persist($ledgerEntry);
             $this->entityManager->flush();

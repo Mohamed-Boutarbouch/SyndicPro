@@ -3,11 +3,11 @@
 namespace App\Service;
 
 use setasign\Fpdi\Fpdi;
-use App\Entity\Receipt;
+use App\Entity\ReceiptTemplate;
 
 class ReceiptGenerator
 {
-    public function generateToStream(Receipt $template, array $data): string
+    public function generateToStream(ReceiptTemplate $template, array $data): string
     {
         $filePath = $template->getFilePath();
 

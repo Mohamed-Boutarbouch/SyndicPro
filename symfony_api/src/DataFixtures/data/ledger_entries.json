@@ -13,6 +13,7 @@
         "payment_method": "bank_transfer",
         "contribution_schedule_id": null,
         "assessment_item_id": null,
+        "receipt_id": null,
         "recorded_by": 1
     },
     {
@@ -29,6 +30,7 @@
         "payment_method": "check",
         "contribution_schedule_id": null,
         "assessment_item_id": 2,
+        "receipt_id": null,
         "recorded_by": 1
     },
     {
@@ -45,6 +47,7 @@
         "payment_method": "credit_card",
         "contribution_schedule_id": null,
         "assessment_item_id": null,
+        "receipt_id": null,
         "recorded_by": 1
     },
     {
@@ -61,6 +64,7 @@
         "payment_method": "bank_transfer",
         "contribution_schedule_id": null,
         "assessment_item_id": null,
+        "receipt_id": null,
         "recorded_by": 1
     },
     {
@@ -77,6 +81,7 @@
         "payment_method": "credit_card",
         "contribution_schedule_id": null,
         "assessment_item_id": null,
+        "receipt_id": null,
         "recorded_by": 1
     }
 ]

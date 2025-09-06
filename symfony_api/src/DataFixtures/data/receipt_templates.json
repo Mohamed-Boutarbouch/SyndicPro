@@ -1,10 +1,11 @@
 [
     {
         "id": 1,
-        "filePath": "/public/templates/template.pdf",
+        "building_id": 1,
+        "name": "Default Template 2025",
         "placeholders": [
             {
-                "x": 105,
+                "x": 75,
                 "y": 75,
                 "key": "fullName",
                 "fontSize": 34,
@@ -37,6 +38,7 @@
                 "fontStyle": "B"
             }
         ],
-        "created_by_id": 1
+        "file_path": "templates/template.pdf",
+        "created_by": 1
     }
 ]

@@ -58,6 +58,18 @@ class Building
     #[ORM\OneToMany(targetEntity: LedgerEntry::class, mappedBy: 'building')]
     private Collection $ledgerEntries;
 
+    /**
+     * @var Collection<int, Receipt>
+     */
+    #[ORM\OneToMany(targetEntity: Receipt::class, mappedBy: 'building')]
+    private Collection $receipts;
+
+    /**
+     * @var Collection<int, ReceiptTemplate>
+     */
+    #[ORM\OneToMany(targetEntity: ReceiptTemplate::class, mappedBy: 'building')]
+    private Collection $receiptTemplates;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -65,6 +77,8 @@ class Building
         $this->regularContributions = new ArrayCollection();
         $this->assessments = new ArrayCollection();
         $this->ledgerEntries = new ArrayCollection();
+        $this->receipts = new ArrayCollection();
+        $this->receiptTemplates = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -252,6 +266,66 @@ class Building
             // set the owning side to null (unless already changed)
             if ($ledgerEntry->getBuilding() === $this) {
                 $ledgerEntry->setBuilding(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Receipt>
+     */
+    public function getReceipts(): Collection
+    {
+        return $this->receipts;
+    }
+
+    public function addReceipt(Receipt $receipt): static
+    {
+        if (!$this->receipts->contains($receipt)) {
+            $this->receipts->add($receipt);
+            $receipt->setBuilding($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReceipt(Receipt $receipt): static
+    {
+        if ($this->receipts->removeElement($receipt)) {
+            // set the owning side to null (unless already changed)
+            if ($receipt->getBuilding() === $this) {
+                $receipt->setBuilding(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ReceiptTemplate>
+     */
+    public function getReceiptTemplates(): Collection
+    {
+        return $this->receiptTemplates;
+    }
+
+    public function addReceiptTemplate(ReceiptTemplate $receiptTemplate): static
+    {
+        if (!$this->receiptTemplates->contains($receiptTemplate)) {
+            $this->receiptTemplates->add($receiptTemplate);
+            $receiptTemplate->setBuilding($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReceiptTemplate(ReceiptTemplate $receiptTemplate): static
+    {
+        if ($this->receiptTemplates->removeElement($receiptTemplate)) {
+            // set the owning side to null (unless already changed)
+            if ($receiptTemplate->getBuilding() === $this) {
+                $receiptTemplate->setBuilding(null);
             }
         }
 

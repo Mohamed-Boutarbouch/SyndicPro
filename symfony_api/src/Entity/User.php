@@ -88,8 +88,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Receipt>
      */
-    #[ORM\OneToMany(targetEntity: Receipt::class, mappedBy: 'createdBy')]
+    #[ORM\OneToMany(targetEntity: Receipt::class, mappedBy: 'generatedBy')]
     private Collection $receipts;
+
+    /**
+     * @var Collection<int, ReceiptTemplate>
+     */
+    #[ORM\OneToMany(targetEntity: ReceiptTemplate::class, mappedBy: 'createdBy')]
+    private Collection $receiptTemplates;
 
     public function __construct()
     {
@@ -99,6 +105,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->assessments = new ArrayCollection();
         $this->ledgerEntries = new ArrayCollection();
         $this->receipts = new ArrayCollection();
+        $this->receiptTemplates = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -403,7 +410,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->receipts->contains($receipt)) {
             $this->receipts->add($receipt);
-            $receipt->setCreatedBy($this);
+            $receipt->setGeneratedBy($this);
         }
 
         return $this;
@@ -413,8 +420,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->receipts->removeElement($receipt)) {
             // set the owning side to null (unless already changed)
-            if ($receipt->getCreatedBy() === $this) {
-                $receipt->setCreatedBy(null);
+            if ($receipt->getGeneratedBy() === $this) {
+                $receipt->setGeneratedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ReceiptTemplate>
+     */
+    public function getReceiptTemplates(): Collection
+    {
+        return $this->receiptTemplates;
+    }
+
+    public function addReceiptTemplate(ReceiptTemplate $receiptTemplate): static
+    {
+        if (!$this->receiptTemplates->contains($receiptTemplate)) {
+            $this->receiptTemplates->add($receiptTemplate);
+            $receiptTemplate->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReceiptTemplate(ReceiptTemplate $receiptTemplate): static
+    {
+        if ($this->receiptTemplates->removeElement($receiptTemplate)) {
+            // set the owning side to null (unless already changed)
+            if ($receiptTemplate->getCreatedBy() === $this) {
+                $receiptTemplate->setCreatedBy(null);
             }
         }
 

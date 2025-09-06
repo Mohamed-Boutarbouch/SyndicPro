@@ -50,9 +50,16 @@ class ContributionSchedule
     #[ORM\OneToMany(targetEntity: LedgerEntry::class, mappedBy: 'contributionSchedule')]
     private Collection $ledgerEntries;
 
+    /**
+     * @var Collection<int, Receipt>
+     */
+    #[ORM\OneToMany(targetEntity: Receipt::class, mappedBy: 'contributionSchedule')]
+    private Collection $receipts;
+
     public function __construct()
     {
         $this->ledgerEntries = new ArrayCollection();
+        $this->receipts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -180,6 +187,36 @@ class ContributionSchedule
             // set the owning side to null (unless already changed)
             if ($ledgerEntry->getContributionSchedule() === $this) {
                 $ledgerEntry->setContributionSchedule(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Receipt>
+     */
+    public function getReceipts(): Collection
+    {
+        return $this->receipts;
+    }
+
+    public function addReceipt(Receipt $receipt): static
+    {
+        if (!$this->receipts->contains($receipt)) {
+            $this->receipts->add($receipt);
+            $receipt->setContributionSchedule($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReceipt(Receipt $receipt): static
+    {
+        if ($this->receipts->removeElement($receipt)) {
+            // set the owning side to null (unless already changed)
+            if ($receipt->getContributionSchedule() === $this) {
+                $receipt->setContributionSchedule(null);
             }
         }
 
