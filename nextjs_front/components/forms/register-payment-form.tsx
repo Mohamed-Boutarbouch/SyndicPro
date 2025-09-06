@@ -92,6 +92,12 @@ export function PaymentRecordForm({
     }
   }, [selectedResident, form])
 
+  // const { data: receipt, isLoading: isReceiptLoading } = useSWR(
+  //   receiptId ? `/receipts/${receiptId}` : null,
+  //   () => fetchReceipt(receiptId),
+  //   { revalidateOnFocus: false }
+  // );
+
   const date = new Date()
 
   async function onSubmit(values: RecordPaymentSchema) {
@@ -263,7 +269,6 @@ export function PaymentRecordForm({
             Error: {mutationError.message || "Failed to record payment"}
           </div>
         )}
-
         <Button
           type="submit"
           disabled={isMutating}

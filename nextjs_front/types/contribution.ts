@@ -39,3 +39,19 @@ export interface BuildingContributionStats {
   totalPaidAmount: number;
   totalPaymentCount: number;
 }
+
+export interface CreatePaymentRecordResponse {
+  success: boolean;
+  message: string;
+  paymentId: number;
+  receipt: {
+    id: number;
+    filePath: string;
+  };
+}
+
+export interface Receipt {
+  id: number;
+  number: string;
+  blob: Blob;
+}
