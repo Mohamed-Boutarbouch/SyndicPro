@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Building;
 use App\Entity\RegularContribution;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -99,6 +100,47 @@ class RegularContributionRepository extends ServiceEntityRepository
          cs.id, un.id, un.number, un.floor, cs.amountPerPayment, cs.nextDueDate, cs.frequency'
             )
             ->orderBy('un.number', 'ASC')
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    public function findRecentPaymentHistory(Building $building, int $year): array
+    {
+        return $this->createQueryBuilder('rc')
+            ->select([
+                'b.id AS buildingId',
+                'rc.id AS regularContributionId',
+                'le.id AS ledgerEntryId',
+                'le.amount AS paidAmount',
+                'le.paymentMethod',
+                'le.createdAt AS paymentDate',
+                'le.referenceNumber',
+                'un.id AS unitId',
+                'un.number AS unitNumber',
+                'us.id AS ownerId',
+                'us.firstName AS ownerFirstName',
+                'us.lastName AS ownerLastName',
+                'r.id AS receiptId',
+                'r.filePath AS receiptFilePath'
+            ])
+            ->join('rc.building', 'b')
+            ->leftJoin('rc.contributionSchedules', 'cs')
+            ->leftJoin('cs.unit', 'un')
+            ->leftJoin('un.user', 'us')
+            ->leftJoin(
+                'cs.ledgerEntries',
+                'le',
+                'WITH',
+                'le.type = :incomeType AND le.incomeType = :regularContribution'
+            )
+            ->leftJoin('le.receipt', 'r')
+            ->where('b.id = :buildingId')
+            ->andWhere('rc.year = :year')
+            ->setParameter('buildingId', $building->getId())
+            ->setParameter('year', $year)
+            ->setParameter('incomeType', 'income')
+            ->setParameter('regularContribution', 'regular_contribution')
+            ->orderBy('le.createdAt', 'DESC')
             ->getQuery()
             ->getArrayResult();
     }

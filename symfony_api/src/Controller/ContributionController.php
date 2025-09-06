@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\DTO\Response\UnitContributionResponse;
+use App\Entity\Building;
 use App\Repository\RegularContributionRepository;
 use App\Repository\UnitRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,12 +34,24 @@ final class ContributionController extends AbstractController
     #[Route('/building/{buildingId}/schedule/year/{year}', methods: ['GET'], name: 'schedule')]
     public function schedule(int $buildingId, int $year): Response
     {
-        $stats = $this->regularContributionRepository->findRegularContributionReport($buildingId, $year);
+        $schedule = $this->regularContributionRepository->findRegularContributionReport($buildingId, $year);
 
         return $this->json(
-            UnitContributionResponse::fromDataArray($stats),
+            UnitContributionResponse::fromDataArray($schedule),
             status: 200,
             context: ['groups' => ['contribution:schedule-table']]
+        );
+    }
+
+    #[Route('/{id}/history/{year}', methods: ['GET'], name: 'history')]
+    public function history(Building $building, int $year): Response
+    {
+        $history = $this->regularContributionRepository->findRecentPaymentHistory($building, $year);
+
+        return $this->json(
+            UnitContributionResponse::fromDataArray($history),
+            status: 200,
+            context: ['groups' => ['contribution:history-table']]
         );
     }
 }
