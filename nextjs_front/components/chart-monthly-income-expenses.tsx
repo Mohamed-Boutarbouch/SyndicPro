@@ -29,7 +29,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 interface ChartMonthlyIncomeExpensesProps {
-  monthlyData: MonthlyIncomeExpensesResponse[]; // just the array
+  monthlyData: MonthlyIncomeExpensesResponse[];
 }
 
 export function ChartMonthlyIncomeExpenses({ monthlyData }: ChartMonthlyIncomeExpensesProps) {

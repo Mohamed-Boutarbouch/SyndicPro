@@ -32,10 +32,16 @@ const chartConfig = {
 }
 
 interface ChartPieDonutExpensesProps {
-  expensesData: ExpensesDistributionResponse["expensesDistribution"];
+  expensesData: ExpensesDistributionResponse[];
 }
 
 export function ChartPieDonutExpenses({ expensesData }: ChartPieDonutExpensesProps) {
+  function formatExpenseName(name: string) {
+    return name
+      .split('_')
+      .map(word => word[0].toUpperCase() + word.slice(1))
+      .join(' ');
+  }
   return (
     <Card className="shadow-card">
       <CardHeader>
@@ -74,7 +80,7 @@ export function ChartPieDonutExpenses({ expensesData }: ChartPieDonutExpensesPro
                 className="w-3 h-3 rounded-full"
                 style={{ backgroundColor: expenseDataColorMap[index % expenseDataColorMap.length].color }}
               />
-              <span className="text-sm text-muted-foreground">{item.name}</span>
+              <span className="text-sm text-muted-foreground">{formatExpenseName(item.name)}</span>
             </div>
           ))}
         </div>

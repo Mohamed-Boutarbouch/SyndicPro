@@ -7,7 +7,6 @@ use App\Entity\Building;
 use App\Repository\BuildingRepository;
 use App\Repository\LedgerEntryRepository;
 use App\Repository\UnitRepository;
-use App\Service\DashboardService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -17,7 +16,6 @@ final class DashboardController extends AbstractController
 {
     public function __construct(
         private BuildingRepository $buildingRepository,
-        private DashboardService $dashboardService,
         private UnitRepository $unitRepository,
         private LedgerEntryRepository $ledgerEntryRepository
     ) {
@@ -64,15 +62,12 @@ final class DashboardController extends AbstractController
         return $this->json($monthlyData, status: 200);
     }
 
-    #[Route('/{buildingId}/expenses-distribution', methods: ['GET'], name: 'expenses_distribution')]
-    public function expensesDistribution(int $buildingId): Response
+    #[Route('/{id}/expenses-distribution', methods: ['GET'], name: 'expenses_distribution')]
+    public function expensesDistribution(Building $building): Response
     {
-        $stats = $this->dashboardService->getExpensesDistribution($buildingId);
-
         return $this->json(
-            DashboardResponse::fromData($stats),
-            status: 200,
-            context: ['groups' => ['dashboard:expenses-distribution']]
+            $this->ledgerEntryRepository->getExpensesDistribution($building),
+            status: 200
         );
     }
 }

@@ -25,18 +25,18 @@ export default function Page() {
     () => fetchMonthlyIncomeExpenses(buildingId!)
   );
 
-  // const { data: expensesData, error: expensesError, isLoading: expensesLoading } = useSWR<ExpensesDistributionResponse>(
-  //   dashboardCardsData ? [`/dashboard/building/${buildingId}/expenses-distribution`, buildingId] : null,
-  //   () => fetchExpensesDistribution(buildingId!)
-  // );
+  const { data: expensesData, error: expensesError, isLoading: expensesLoading } = useSWR<ExpensesDistributionResponse[]>(
+    dashboardCardsData ? [`/dashboard/${buildingId}/expenses-distribution`, buildingId] : null,
+    () => fetchExpensesDistribution(buildingId!)
+  );
 
   if (!syndic) return <p>Loading syndic...</p>;
   if (dashboardLoading) return <p>Loading dashboard...</p>;
   if (dashboardError) return <p>Error loading dashboard</p>;
   if (monthlyLoading) return <p>Loading monthly data...</p>;
   if (monthlyError) return <p>Error loading monthly data</p>;
-  // if (expensesLoading) return <p>Loading monthly data...</p>;
-  // if (expensesError) return <p>Error loading monthly data</p>;
+  if (expensesLoading) return <p>Loading monthly data...</p>;
+  if (expensesError) return <p>Error loading monthly data</p>;
 
   return (
     <div className="flex flex-1 flex-col">
@@ -45,7 +45,7 @@ export default function Page() {
           <SectionCards cardStats={dashboardCardsData!} />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <ChartMonthlyIncomeExpenses monthlyData={monthlyData || []} />
-            {/* <ChartPieDonutExpenses expensesData={expensesData!.expensesDistribution} /> */}
+            <ChartPieDonutExpenses expensesData={expensesData || []} />
           </div>
           <TransactionDataTable />
         </div>

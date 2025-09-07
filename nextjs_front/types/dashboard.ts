@@ -38,11 +38,16 @@ export interface MonthlyIncomeExpensesResponse {
 
 }
 
-export interface ExpensesDistributionItem {
-  name: string;
-  value: number;
+export enum ExpenseCategory {
+  UTILITIES = 'utilities',
+  STAFF = 'staff',
+  SYNDIC_FEES = 'syndic_fees',
+  MAINTENANCE = 'maintenance',
+  ADMINISTRATION = 'administration',
+  OTHER = 'other',
 }
 
 export interface ExpensesDistributionResponse {
-  expensesDistribution: ExpensesDistributionItem[];
+  name: ExpenseCategory;
+  value: number;
 }

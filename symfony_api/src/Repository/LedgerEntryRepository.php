@@ -148,4 +148,26 @@ class LedgerEntryRepository extends ServiceEntityRepository
     {
         return $this->transformToMonthlyFormat($results, $startDate, $endDate);
     }
+
+    public function getExpensesDistribution(Building $building): array
+    {
+        $results = $this->createQueryBuilder('le')
+            ->select('le.expenseCategory AS name', 'SUM(le.amount) AS value')
+            ->where('le.building = :buildingId')
+            ->andWhere('le.type = :type')
+            ->setParameter('buildingId', $building->getId())
+            ->setParameter('type', 'expense')
+            ->groupBy('le.expenseCategory')
+            ->getQuery()
+            ->getArrayResult();
+
+        $expensesDistribution = array_map(function ($item) {
+            return [
+                'name' => $item['name'],
+                'value' => (float) $item['value']
+            ];
+        }, $results);
+
+        return  $expensesDistribution;
+    }
 }
