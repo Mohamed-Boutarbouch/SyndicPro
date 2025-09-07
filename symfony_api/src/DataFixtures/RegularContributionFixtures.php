@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Building;
 use App\Entity\RegularContribution;
+use App\Entity\User;
 use App\Enum\ContributionStatus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -28,6 +29,9 @@ class RegularContributionFixtures extends Fixture implements DependentFixtureInt
             $regularContribution->setEndDate(new \DateTimeImmutable($item['end_date']));
             $regularContribution->setStatus(ContributionStatus::from($item['status']));
 
+            $user = $this->getReference('user_' . $item['created_by_id'], User::class);
+            $regularContribution->setCreatedBy($user);
+
             $this->addReference('regular_contribution_' . $item['id'], $regularContribution);
 
             $manager->persist($regularContribution);
@@ -38,6 +42,6 @@ class RegularContributionFixtures extends Fixture implements DependentFixtureInt
 
     public function getDependencies(): array
     {
-        return [BuildingFixtures::class];
+        return [BuildingFixtures::class, UserFixtures::class];
     }
 }

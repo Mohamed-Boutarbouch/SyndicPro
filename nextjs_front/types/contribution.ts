@@ -83,3 +83,8 @@ export interface PaymentHistoryResponse {
   receiptFilePath: string;
   referenceNumber: string;
 }
+
+export interface AvailableYears {
+  regularContributionId: number;
+  year: number;
+}

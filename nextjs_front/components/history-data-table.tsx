@@ -14,7 +14,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
-import { Calendar, ChevronDown, MoreHorizontal, Receipt } from "lucide-react"
+import { Calendar, ChevronDown, Receipt } from "lucide-react"
 import {
   Card,
   CardContent,
@@ -27,9 +27,6 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"

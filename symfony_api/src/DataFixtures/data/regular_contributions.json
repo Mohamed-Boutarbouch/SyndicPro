@@ -8,6 +8,17 @@
         "start_date": "2025-01-01",
         "end_date": "2025-12-31",
         "status": "active",
-        "created_by": 1
+        "created_by_id": 1
+    },
+    {
+        "id": 2,
+        "building_id": 1,
+        "year": 2026,
+        "total_annual_amount": 50000.00,
+        "amount_per_unit": 3500.00,
+        "start_date": "2026-01-01",
+        "end_date": "2026-12-31",
+        "status": "active",
+        "created_by_id": 1
     }
 ]

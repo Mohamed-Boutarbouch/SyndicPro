@@ -54,4 +54,16 @@ final class ContributionController extends AbstractController
             context: ['groups' => ['contribution:history-table']]
         );
     }
+
+    #[Route('/{id}/years', methods: ['GET'], name: 'years')]
+    public function years(Building $building): Response
+    {
+        $years = $this->regularContributionRepository->findAvailableYears($building);
+
+        return $this->json(
+            UnitContributionResponse::fromDataArray($years),
+            status: 200,
+            context: ['groups' => ['contribution:years']]
+        );
+    }
 }

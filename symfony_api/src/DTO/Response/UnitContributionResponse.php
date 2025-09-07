@@ -68,8 +68,16 @@ class UnitContributionResponse
     #[Groups(['contribution:card-stats'])]
     public float $amountPerUnit;
 
-    #[Groups(['contribution:card-stats', 'contribution:schedule-table', 'contribution:history-table'])]
+    #[Groups([
+        'contribution:card-stats',
+        'contribution:schedule-table',
+        'contribution:history-table',
+        'contribution:years'
+    ])]
     public int $regularContributionId;
+
+    #[Groups(['contribution:years'])]
+    public ?int $year;
 
     #[Groups(['contribution:card-stats'])]
     public float $totalAnnualAmount;
@@ -172,6 +180,9 @@ class UnitContributionResponse
         $dto->receiptFilePath = !empty($data['receiptFilePath'])
             ? 'http://localhost:8000/' . ltrim((string) $data['receiptFilePath'], '/')
             : '';
+
+
+        $dto->year = $data['year'] ?? null;
 
         return $dto;
     }

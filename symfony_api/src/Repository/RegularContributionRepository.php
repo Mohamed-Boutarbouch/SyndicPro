@@ -144,4 +144,15 @@ class RegularContributionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getArrayResult();
     }
+
+    public function findAvailableYears(Building $building): array
+    {
+        return $this->createQueryBuilder('rc')
+            ->select(['rc.id AS regularContributionId', 'rc.year'])
+            ->where('rc.building = :buildingId')
+            ->setParameter('buildingId', $building->getId())
+            ->orderBy('rc.year', 'ASC')
+            ->getQuery()
+            ->getArrayResult();
+    }
 }
