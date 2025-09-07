@@ -70,4 +70,35 @@ final class DashboardController extends AbstractController
             status: 200
         );
     }
+
+    #[Route('/{id}/transactions', methods: ['GET'], name: 'transactions')]
+    public function transactions(Building $building): Response
+    {
+        $entries = $this->ledgerEntryRepository->findBy(
+            ['building' => $building],
+            ['createdAt' => 'DESC']
+        );
+
+        $data = array_map(function ($entry) {
+            return [
+                'id' => $entry->getId(),
+                'amount' => $entry->getAmount(),
+                'description' => $entry->getDescription(),
+                'type' => $entry->getType()?->value,
+                'incomeType' => $entry->getIncomeType()?->value,
+                'expenseCategory' => $entry->getExpenseCategory()?->value,
+                'vendor' => $entry->getVendor(),
+                'unit' => $entry->getUnit() ? [
+                    'id' => $entry->getUnit()->getId(),
+                    'number' => $entry->getUnit()->getNumber(),
+                ] : null,
+                'referenceNumber' => $entry->getReferenceNumber(),
+                'paymentMethod' => $entry->getPaymentMethod()?->value,
+                'createdAt' => $entry->getCreatedAt()?->format('Y-m-d H:i:s'),
+                'updatedAt' => $entry->getUpdatedAt()?->format('Y-m-d H:i:s'),
+            ];
+        }, $entries);
+
+        return $this->json($data);
+    }
 }
