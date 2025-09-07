@@ -14,7 +14,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
-import { Calendar, ChevronDown, MoreHorizontal } from "lucide-react"
+import { Calendar, ChevronDown, MoreHorizontal, Receipt } from "lucide-react"
 import {
   Card,
   CardContent,
@@ -45,6 +45,7 @@ import { formatMoney } from "@/lib/formatMoney"
 import { Badge } from "@/components/ui/badge"
 import { PaymentHistoryResponse, PaymentMethod } from "@/types/contribution"
 import { cn } from "@/lib/utils"
+import Link from "next/link"
 
 interface HistoryDataTableProps {
   data: PaymentHistoryResponse[]
@@ -142,32 +143,21 @@ export const columns: ColumnDef<PaymentHistoryResponse>[] = [
   },
   {
     id: "actions",
-    enableHiding: false,
+    header: "Actions",
     cell: ({ row }) => {
-      const contribution = row.original
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(contribution.unitId.toString())}
-            >
-              Copy Unit ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View Owner</DropdownMenuItem>
-            <DropdownMenuItem>View Payment Details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+      const receiptUrl = row.original.receiptFilePath
+
+      return receiptUrl ? (
+        <Button variant="link" asChild>
+          <Link href={receiptUrl} target="_blank" rel="noopener noreferrer">
+            <Receipt className="h-4 w-4" />
+          </Link>
+        </Button>
+      ) : (
+        <span className="text-muted-foreground italic">No receipt</span>
       )
-    },
-  },
+    }
+  }
 ]
 
 export function HistoryDataTable({ data }: HistoryDataTableProps) {

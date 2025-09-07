@@ -28,7 +28,7 @@ export function RegisterPaymentDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <div className="flex justify-end">
         <DialogTrigger asChild>
-          <Button size="lg" className="text-black bg-primary hover:cursor-pointer w-40">
+          <Button size="lg" className="text-black bg-primary hover:bg-secondary hover:text-white hover:cursor-pointer">
             <Plus className="h-4 w-4 mr-2" />
             Record Payment
           </Button>

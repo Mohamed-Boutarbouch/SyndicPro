@@ -195,12 +195,6 @@ export function TransactionDataTable() {
 
   return (
     <div className="w-full">
-      <div className="flex justify-end py-4">
-        <Button size="lg" className="text-black bg-primary hover:bg-secondary hover:text-white hover:cursor-pointer">
-          <Plus className="h-4 w-4 mr-2" />
-          New Transaction
-        </Button>
-      </div>
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
