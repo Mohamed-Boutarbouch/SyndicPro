@@ -3,11 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\ReceiptRepository;
+use App\Traits\TimestampableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ReceiptRepository::class)]
 class Receipt
 {
+    use TimestampableTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

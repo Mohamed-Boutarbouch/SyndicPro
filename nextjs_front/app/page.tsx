@@ -20,21 +20,21 @@ export default function Page() {
     () => fetchDashboardCardStats(buildingId!)
   );
 
-  const { data: monthlyData, error: monthlyError, isLoading: monthlyLoading } = useSWR<MonthlyIncomeExpensesResponse>(
-    dashboardCardsData ? [`/dashboard/building/${buildingId}/income-expenses`, buildingId] : null,
+  const { data: monthlyData, error: monthlyError, isLoading: monthlyLoading } = useSWR<MonthlyIncomeExpensesResponse[]>(
+    dashboardCardsData ? [`/dashboard/${buildingId}/income-expenses`, buildingId] : null,
     () => fetchMonthlyIncomeExpenses(buildingId!)
   );
 
-  const { data: expensesData, error: expensesError, isLoading: expensesLoading } = useSWR<ExpensesDistributionResponse>(
-    dashboardCardsData ? [`/dashboard/building/${buildingId}/expenses-distribution`, buildingId] : null,
-    () => fetchExpensesDistribution(buildingId!)
-  );
+  // const { data: expensesData, error: expensesError, isLoading: expensesLoading } = useSWR<ExpensesDistributionResponse>(
+  //   dashboardCardsData ? [`/dashboard/building/${buildingId}/expenses-distribution`, buildingId] : null,
+  //   () => fetchExpensesDistribution(buildingId!)
+  // );
 
   if (!syndic) return <p>Loading syndic...</p>;
   if (dashboardLoading) return <p>Loading dashboard...</p>;
   if (dashboardError) return <p>Error loading dashboard</p>;
-  // if (monthlyLoading) return <p>Loading monthly data...</p>;
-  // if (monthlyError) return <p>Error loading monthly data</p>;
+  if (monthlyLoading) return <p>Loading monthly data...</p>;
+  if (monthlyError) return <p>Error loading monthly data</p>;
   // if (expensesLoading) return <p>Loading monthly data...</p>;
   // if (expensesError) return <p>Error loading monthly data</p>;
 
@@ -43,10 +43,10 @@ export default function Page() {
       <div className="@container/main flex flex-1 flex-col gap-2">
         <div className="flex flex-col gap-4 p-8 md:gap-6 md:p-10">
           <SectionCards cardStats={dashboardCardsData!} />
-          {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-6"> */}
-          {/*   <ChartMonthlyIncomeExpenses monthlyData={monthlyData!.monthlyIncomeExpenses} /> */}
-          {/*   <ChartPieDonutExpenses expensesData={expensesData!.expensesDistribution} /> */}
-          {/* </div> */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <ChartMonthlyIncomeExpenses monthlyData={monthlyData || []} />
+            {/* <ChartPieDonutExpenses expensesData={expensesData!.expensesDistribution} /> */}
+          </div>
           <TransactionDataTable />
         </div>
       </div>

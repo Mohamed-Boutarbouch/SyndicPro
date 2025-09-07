@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 import {
   Card,
@@ -8,14 +8,14 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
-import { MonthlyIncomeExpensesResponse } from "@/types/dashboard"
+} from "@/components/ui/chart";
+import { MonthlyIncomeExpensesResponse } from "@/types/dashboard";
 
 const chartConfig = {
   income: {
@@ -26,16 +26,31 @@ const chartConfig = {
     label: "Expenses",
     color: "var(--chart-5)",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 interface ChartMonthlyIncomeExpensesProps {
-  monthlyData: MonthlyIncomeExpensesResponse["monthlyIncomeExpenses"];
+  monthlyData: MonthlyIncomeExpensesResponse[]; // just the array
 }
 
 export function ChartMonthlyIncomeExpenses({ monthlyData }: ChartMonthlyIncomeExpensesProps) {
-  const firstMonth = monthlyData[0].month;
+  if (!monthlyData || monthlyData.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Monthly Income vs Expenses</CardTitle>
+          <CardDescription>Loading...</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-center h-[300px]">
+            <p className="text-muted-foreground">Loading chart data...</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
-  const lastMonth = monthlyData[monthlyData.length - 1].month;
+  const firstMonth = monthlyData[0].monthName;
+  const lastMonth = monthlyData[monthlyData.length - 1].monthName;
 
   return (
     <Card>
@@ -48,11 +63,10 @@ export function ChartMonthlyIncomeExpenses({ monthlyData }: ChartMonthlyIncomeEx
           <BarChart accessibilityLayer data={monthlyData}>
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="monthName"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip
               cursor={false}
@@ -64,5 +78,5 @@ export function ChartMonthlyIncomeExpenses({ monthlyData }: ChartMonthlyIncomeEx
         </ChartContainer>
       </CardContent>
     </Card>
-  )
+  );
 }

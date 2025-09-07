@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\DTO\Response\DashboardResponse;
+use App\Entity\Building;
 use App\Repository\BuildingRepository;
 use App\Repository\LedgerEntryRepository;
 use App\Repository\UnitRepository;
@@ -55,16 +56,12 @@ final class DashboardController extends AbstractController
         );
     }
 
-    #[Route('/{buildingId}/income-expenses', methods: ['GET'], name: 'income_expenses')]
-    public function incomeAndExpenses(int $buildingId): Response
+    #[Route('/{id}/income-expenses', methods: ['GET'], name: 'income_expenses')]
+    public function incomeAndExpenses(Building $building): Response
     {
-        $stats = $this->dashboardService->getIncomeExpenses($buildingId);
+        $monthlyData = $this->ledgerEntryRepository->getFinancialSummaryLast6Months($building);
 
-        return $this->json(
-            DashboardResponse::fromData($stats),
-            status: 200,
-            context: ['groups' => ['dashboard:income-expenses']]
-        );
+        return $this->json($monthlyData, status: 200);
     }
 
     #[Route('/{buildingId}/expenses-distribution', methods: ['GET'], name: 'expenses_distribution')]

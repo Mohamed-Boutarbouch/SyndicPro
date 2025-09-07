@@ -144,9 +144,8 @@ class BuildingRepository extends ServiceEntityRepository
     /**
      * Get financial summary for the last 6 months
      */
-    public function getFinancialSummaryLast6Months(int $buildingId): array
+    public function getFinancialSummaryLast6Months(Building $building): array
     {
-
         $em = $this->getEntityManager();
 
         // $endDate = new \DateTime('last day of this month');
@@ -170,7 +169,7 @@ class BuildingRepository extends ServiceEntityRepository
             ->groupBy('year, month')
             ->orderBy('year', 'ASC')
             ->addOrderBy('month', 'ASC')
-            ->setParameter('buildingId', $buildingId)
+            ->setParameter('buildingId', $building->getId())
             ->setParameter('startDate', $startDate->format('Y-m-d'))
             ->setParameter('endDate', $endDate->format('Y-m-d'))
             ->setParameter('income', 'income')

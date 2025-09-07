@@ -26,14 +26,16 @@ export interface DashboardCardStatsResponse {
   totalIncome: number;
 };
 
-export interface MonthlyIncomeExpensesItem {
-  month: string;
-  income: number;
-  expenses: number;
-}
-
 export interface MonthlyIncomeExpensesResponse {
-  monthlyIncomeExpenses: MonthlyIncomeExpensesItem[];
+  expenses: number;
+  income: number;
+  month: number;
+  monthFullName: string;
+  monthName: string;
+  net: number;
+  period: string;
+  year: number;
+
 }
 
 export interface ExpensesDistributionItem {
