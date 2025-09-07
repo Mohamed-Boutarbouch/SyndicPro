@@ -125,8 +125,9 @@ export function PaymentRecordForm({
       console.log("Payment recorded successfully:", result);
 
       // Refresh the schedule query
-      mutate(`/contributions/building/${buildingId}/schedule/year/${currentYear}`);
-      mutate(`/contributions/building/${buildingId}/stats/year/${currentYear}`)
+      mutate(`/contributions/${buildingId}/schedule/${currentYear}`);
+      mutate(`/contributions/${buildingId}/stats/${currentYear}`)
+      mutate(`/contributions/${buildingId}/history/${currentYear}`)
       form.reset({
         unitId: "",
         amount: 0.00,

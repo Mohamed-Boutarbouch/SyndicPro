@@ -12,6 +12,14 @@ export enum PaymentStatus {
   PAID = 'paid'
 }
 
+export enum PaymentMethod {
+  CASH = "cash",
+  BANK_TRANSFER = "bank_transfer",
+  CHECK = "check",
+  CREDIT_CARD = "credit_card",
+  OTHER = "other",
+}
+
 export interface ContributionScheduleResponse {
   actualPaidAmountPerUnit: number;
   amountPerPayment: number;
@@ -54,4 +62,24 @@ export interface Receipt {
   id: number;
   number: string;
   blob: Blob;
+}
+
+export interface PaymentHistoryResponse {
+  buildingId: number;
+  ledgerEntryId: number;
+  ownerId: number;
+  ownerFirstName: string;
+  ownerLastName: string;
+  ownerFullName: string;
+  unitId: number;
+  unitNumber: string;
+  regularContributionId: number;
+
+  paidAmount: number;
+  paymentDate: string;
+  paymentMethod: PaymentMethod;
+
+  receiptId: number;
+  receiptFilePath: string;
+  referenceNumber: string;
 }

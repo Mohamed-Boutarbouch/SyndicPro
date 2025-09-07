@@ -23,7 +23,7 @@ class UnitContributionResponse
     #[Groups(['contribution:schedule-table', 'contribution:history-table'])]
     public string $ownerLastName;
 
-    #[Groups(['contribution:schedule-table'])]
+    #[Groups(['contribution:schedule-table', 'contribution:history-table'])]
     public string $ownerFullName;
 
     #[Groups(['contribution:schedule-table'])]
@@ -96,7 +96,7 @@ class UnitContributionResponse
     public ?int $receiptId = null;
 
     #[Groups(['contribution:history-table'])]
-    public string $receiptFilePath;
+    public ?string $receiptFilePath;
 
     public static function fromData(array $data): self
     {
@@ -168,7 +168,10 @@ class UnitContributionResponse
         $dto->referenceNumber = $data['referenceNumber'] ?? null;
 
         $dto->receiptId = $data['receiptId'] ?? null;
-        $dto->receiptFilePath = (string) ($data['receiptFilePath'] ? 'http://localhost:8000/' . $data['receiptFilePath'] : '');
+
+        $dto->receiptFilePath = !empty($data['receiptFilePath'])
+            ? 'http://localhost:8000/' . ltrim((string) $data['receiptFilePath'], '/')
+            : '';
 
         return $dto;
     }

@@ -127,7 +127,7 @@ class RegularContributionRepository extends ServiceEntityRepository
             ->leftJoin('rc.contributionSchedules', 'cs')
             ->leftJoin('cs.unit', 'un')
             ->leftJoin('un.user', 'us')
-            ->leftJoin(
+            ->join(
                 'cs.ledgerEntries',
                 'le',
                 'WITH',

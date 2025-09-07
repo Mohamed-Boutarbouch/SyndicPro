@@ -19,7 +19,7 @@ final class ContributionController extends AbstractController
     ) {
     }
 
-    #[Route('/building/{buildingId}/stats/year/{year}', methods: ['GET'], name: 'stats')]
+    #[Route('/{buildingId}/stats/{year}', methods: ['GET'], name: 'stats')]
     public function stats(int $buildingId, int $year): Response
     {
         $stats = $this->regularContributionRepository->getRegularContributionSummary($buildingId, $year);
@@ -31,7 +31,7 @@ final class ContributionController extends AbstractController
         );
     }
 
-    #[Route('/building/{buildingId}/schedule/year/{year}', methods: ['GET'], name: 'schedule')]
+    #[Route('/{buildingId}/schedule/{year}', methods: ['GET'], name: 'schedule')]
     public function schedule(int $buildingId, int $year): Response
     {
         $schedule = $this->regularContributionRepository->findRegularContributionReport($buildingId, $year);
